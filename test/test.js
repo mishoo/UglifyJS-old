@@ -52,12 +52,12 @@ fs.readFile(
         "../lib/parse-js.js"
         // "/tmp/foo1.js"
             , "utf8", function(err, data){
-                    //code = [ data ].join("\n\n");
+                    code = [ data ].join("\n\n");
                     doit(code);
 });
 
 function doit(code) {
-        var p = jsp.parse(code);
+        var p = jsp.parse(code, true, true);
         sys.puts(JSON.stringify(p));
 
         sys.puts("\n");
