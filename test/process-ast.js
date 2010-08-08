@@ -4,7 +4,8 @@ var sys = require("sys");
 var fs = require("fs");
 global.sys = sys;
 
-var jsp = require("../lib/parse-js");
+//var jsp = require("../lib/parse-js");
+var jsp = require("./tmp");
 
 var code = "(function parc(moo, man){\n\
   try {\n\
@@ -26,12 +27,12 @@ fs.readFile(
                         var ast = jsp.parse(code);
                         // sys.puts(JSON.stringify(ast) + "\n");
 
-                        var ast2 = jsp.process_ast(ast);
+                        var ast2 = jsp.process_ast(ast, { mangle: true });
 
                         // sys.puts(JSON.stringify(ast2));
                         // sys.puts("\n");
 
-                        var out = jsp.gen_code(ast2, true);
+                        var out = jsp.gen_code(ast2, false);
                         sys.puts(out);
 
                 } catch(ex) {
