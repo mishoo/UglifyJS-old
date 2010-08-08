@@ -48,25 +48,42 @@ code += "\n\nif (foo) { bar() } else if (bar) { foo() } else { parc() }";
 
 code += "\n\nif (foo) bar(); else if (bar) foo(); else parc();";
 
+code += "\n\nret = 3 * (5 + 2)";
+
+code += "\n\nret = (5 + 2) * (1 + 2)";
+
+code += "\n\nret = (10 + 2) * 3 + 1;";
+
+code += "\n\n loopDeLoop: while(!foo) { ret = 10; break loopDeLoop; }";
+
 fs.readFile(
         "../lib/parse-js.js"
         // "/tmp/foo1.js"
-            , "utf8", function(err, data){
-                    code = [ data ].join("\n\n");
-                    doit(code);
-});
+        , "utf8", function(err, data){
+                code = [ data ].join("\n\n");
+                try {
+                        var gen = doit(code);
+                        eval(gen);
+                } catch(ex) {
+                        sys.log(ex.toString());
+                }
+        }
+);
 
 function doit(code) {
-        var p = jsp.parse(code, true, true);
+        var p = jsp.parse(code, false, true);
         sys.puts(JSON.stringify(p));
-
         sys.puts("\n");
 
-        var gen = jsp.gen_code(p, {
-                indent_start: 0,
-                tab_width: 4
-        });
+        var gen = jsp.gen_code(p,
+                               true
+                               // {
+                               //         indent_start: 0,
+                               //         tab_width: 4
+                               // }
+                              );
         sys.puts(gen);
+        return gen;
 
         //eval(gen);
 };
