@@ -19,8 +19,8 @@ var code = "(function parc(moo, man){\n\
 ";
 
 fs.readFile(
-        "../lib/parse-js.js"
-        //"/tmp/foo1.js"
+        //"../lib/parse-js.js"
+        "/tmp/foo1.js"
         , "utf8", function(err, data){
                 code = [ data ].join("\n\n");
                 try {
@@ -32,7 +32,7 @@ fs.readFile(
                         // sys.puts(JSON.stringify(ast2));
                         // sys.puts("\n");
 
-                        var out = jsp.gen_code(ast2, false);
+                        var out = jsp.gen_code(ast2, true);
                         sys.puts(out);
 
                 } catch(ex) {

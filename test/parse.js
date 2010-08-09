@@ -18,6 +18,12 @@ code = "a = { x: p.x != null ? p.x + 2 : null, y: p.y };";
 
 code = "with(a = {}) { foo; bar; }";
 
+code = "a + ++b";
+
+code = "a++ + b";
+
+code = '(a + b)("foo")';
+
 try {
         var ast = jsp.parse(code);
         sys.puts(JSON.stringify(ast));

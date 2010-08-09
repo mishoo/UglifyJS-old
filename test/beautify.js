@@ -10,7 +10,7 @@ fs.readFile(filename, "utf8", function(err, text){
         try {
                 var ast = time_it("parse", function(){ return jsp.parse(text); });
                 //sys.puts(JSON.stringify(ast));
-                var ast2 = time_it("process", function(){ return jsp.process_ast(ast) });
+                var ast2 = time_it("process", function(){ return jsp.process_ast(ast, { mangle: false }) });
                 var gen = time_it("generate", function(){ return jsp.gen_code(ast2, true) });
                 sys.puts(gen);
         } catch(ex) {
