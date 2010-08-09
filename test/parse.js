@@ -24,6 +24,8 @@ code = "a++ + b";
 
 code = '(a + b)("foo")';
 
+code = ".1";
+
 try {
         var ast = jsp.parse(code);
         sys.puts(JSON.stringify(ast));
