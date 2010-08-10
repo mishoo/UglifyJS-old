@@ -11,11 +11,11 @@ fs.readFile(filename, "utf8", function(err, text){
                 var ast = time_it("parse", function(){ return jsp.parse(text); });
                 //sys.puts(JSON.stringify(ast));
                 var ast2 = time_it("process", function(){ return jsp.process_ast(ast, { mangle: false }) });
-                var gen = time_it("generate", function(){ return jsp.gen_code(ast2, true) });
+                var gen = time_it("generate", function(){ return jsp.gen_code(ast2, false) });
                 sys.puts(gen);
         } catch(ex) {
-                sys.puts(ex.stack);
-                sys.puts(sys.inspect(ex));
+                sys.debug(ex.stack);
+                sys.debug(sys.inspect(ex));
         }
 });
 
@@ -23,6 +23,6 @@ function time_it(name, cont) {
         var t1 = new Date().getTime();
         var ret = cont();
         var diff = new Date().getTime() - t1;
-        sys.puts("// " + name + ": " + (diff / 1000).toFixed(3) + " sec.");
+        sys.debug("// " + name + ": " + (diff / 1000).toFixed(3) + " sec.");
         return ret;
 };

@@ -26,6 +26,14 @@ code = '(a + b)("foo")';
 
 code = ".1";
 
+code = "(1 + 2) * (3 + 4)";
+
+code = "1 || (2 || 3) && 4";
+
+code = "[1, 2, 3, ]";
+
+code = "[, ]";
+
 try {
         var ast = jsp.parse(code);
         sys.puts(JSON.stringify(ast));
