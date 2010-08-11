@@ -34,6 +34,10 @@ code = "[1, 2, 3, ]";
 
 code = "[, ]";
 
+code = "({ foo: 'bar' }).foo";
+
+//code = "a = /\\\//.test('/')";
+
 try {
         var ast = jsp.parse(code);
         sys.puts(JSON.stringify(ast));
