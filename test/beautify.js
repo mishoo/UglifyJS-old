@@ -4,14 +4,15 @@ global.sys = require("sys");
 var fs = require("fs");
 
 var jsp = require("../lib/parse-js");
+var pro = require("../lib/process");
 
 var filename = process.argv[2];
 fs.readFile(filename, "utf8", function(err, text){
         try {
                 var ast = time_it("parse", function(){ return jsp.parse(text); });
-                //sys.puts(JSON.stringify(ast));
-                var ast2 = time_it("process", function(){ return jsp.process_ast(ast, { mangle: false }) });
-                var gen = time_it("generate", function(){ return jsp.gen_code(ast2, true) });
+                ast = time_it("mangle", function(){ return pro.ast_mangle(ast); });
+                ast = time_it("squeeze", function(){ return pro.ast_squeeze(ast); });
+                var gen = time_it("generate", function(){ return jsp.gen_code(ast, false) });
                 sys.puts(gen);
         } catch(ex) {
                 sys.debug(ex.stack);
