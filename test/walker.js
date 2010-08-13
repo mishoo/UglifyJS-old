@@ -12,11 +12,12 @@ global.log_inspect = function(obj) {
 
 var code = "//var eval;\n\
 var a = function(z){\n\
+var e = eval;\n\
 try {\n\
 var boo = 10;\n\
 return boo; }\n\
 catch(ex) {show(ex + boo)}\n\
-finally eval(crap);\n\
+finally e(crap);\n\
 }\n\
 function bar(moo, man){\n\
 var parc = 20, qwe = moo / man, zap = 10 * 23 + '50';\n\
