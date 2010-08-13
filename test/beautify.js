@@ -12,7 +12,7 @@ fs.readFile(filename, "utf8", function(err, text){
                 var ast = time_it("parse", function(){ return jsp.parse(text); });
                 ast = time_it("mangle", function(){ return pro.ast_mangle(ast); });
                 ast = time_it("squeeze", function(){ return pro.ast_squeeze(ast); });
-                var gen = time_it("generate", function(){ return jsp.gen_code(ast, false) });
+                var gen = time_it("generate", function(){ return pro.gen_code(ast, false) });
                 sys.puts(gen);
         } catch(ex) {
                 sys.debug(ex.stack);
