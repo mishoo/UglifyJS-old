@@ -49,5 +49,15 @@ if (foo) while(true) {
                 return "bar";
         } else {
                 baz();
+                caz();
+        }
+})();
+
+(function(){
+        if (foo) {
+                if (bar) return foo; else return bar;
+        } else {
+                baz();
+                caz();
         }
 })();
