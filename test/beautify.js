@@ -17,6 +17,7 @@ fs.readFile(filename, "utf8", function(err, text){
         } catch(ex) {
                 sys.debug(ex.stack);
                 sys.debug(sys.inspect(ex));
+                sys.debug(JSON.stringify(ex));
         }
 });
 
