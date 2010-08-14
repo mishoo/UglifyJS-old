@@ -23,8 +23,6 @@ fs.readFile(filename, "utf8", function(err, text){
 
 function time_it(name, cont) {
         var t1 = new Date().getTime();
-        var ret = cont();
-        var diff = new Date().getTime() - t1;
-        sys.debug("// " + name + ": " + (diff / 1000).toFixed(3) + " sec.");
-        return ret;
+        try { return cont(); }
+        finally { sys.debug("// " + name + ": " + ((new Date().getTime() - t1) / 1000).toFixed(3) + " sec."); }
 };
