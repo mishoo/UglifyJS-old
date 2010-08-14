@@ -8,6 +8,16 @@ if (foo) {
         caz();
 }
 
+cond ? foo() : bar();
+
+if (cond)
+        foo();
+else
+        bar();
+
+if (cond)
+        foo();
+
 if (foo) {
         for(;;) {
                 if (bar) {
