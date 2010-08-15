@@ -183,8 +183,8 @@ I'd love to hear about them ([[http://groups.google.com/group/uglifyjs][use the 
 
 ** Links
 
-- Project at GitHub: http://github.com/mishoo/UglifyJS
-- Google Group: http://groups.google.com/group/uglifyjs
+- Project at GitHub: [[http://github.com/mishoo/UglifyJS][http://github.com/mishoo/UglifyJS]]
+- Google Group: [[http://groups.google.com/group/uglifyjs][http://groups.google.com/group/uglifyjs]]
 
 ** License
 
