@@ -162,7 +162,7 @@ maintainable and easily extensible, so I would say it has a good place in
 this field and it's bound to become the de-facto standard JS minifier.  And
 I shall rule the world. :-) Use it, and spread the word!
 
-*** ... and how safe?
+** Bugs?
 
 Unfortunately, for the time being there is no automated test suite.  But I
 ran the compressor manually on non-trivial code, and then I tested that the
@@ -176,10 +176,10 @@ and as such DL contains a lot of syntactic hacks[1] such as “foo == bar ?  a
 
 Since the parser/compressor runs fine on DL and jQuery, I'm quite confident
 that it's solid enough for production use.  If you can identify any bugs,
-I'd love to hear about them (=mihai.bazon@gmail.com=).
+I'd love to hear about them ([[http://groups.google.com/group/uglifyjs][use the Google Group]] or email me directly).
 
-[1] I even reported a few bugs/fixes in the original [[http://marijn.haverbeke.nl/parse-js/][parse-js]] library, and
-    Marijn pushed fixes literally in minutes.
+[1] I even reported a few bugs and suggested some fixes in the original
+    [[http://marijn.haverbeke.nl/parse-js/][parse-js]] library, and Marijn pushed fixes literally in minutes.
 
 ** License
 
