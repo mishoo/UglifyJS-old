@@ -181,6 +181,11 @@ I'd love to hear about them ([[http://groups.google.com/group/uglifyjs][use the 
 [1] I even reported a few bugs and suggested some fixes in the original
     [[http://marijn.haverbeke.nl/parse-js/][parse-js]] library, and Marijn pushed fixes literally in minutes.
 
+** Links
+
+- Project at GitHub: http://github.com/mishoo/UglifyJS
+- Google Group: http://groups.google.com/group/uglifyjs
+
 ** License
 
 UglifyJS is released under a ZLIB-like license:
