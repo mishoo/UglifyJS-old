@@ -1,0 +1,153 @@
+#! /usr/bin/env node
+// -*- js2 -*-
+
+global.sys = require("sys");
+var fs = require("fs");
+var jsp = require("uglifyjs/parse-js"); // symlink ~/.node_libraries/uglifyjs => /path/to/../lib/
+var pro = require("uglifyjs/process");
+
+var options = {
+        mangle: true,
+        squeeze: true,
+        beautify: false,
+        verbose: false,
+        show_copyright: true,
+        beautify_options: {
+                indent_level: 4,
+                indent_start: 0,
+                quote_keys: false,
+                space_colon: false
+        },
+        output: true            // stdout
+};
+
+var args = jsp.slice(process.argv, 2);
+
+out: while (args.length > 0) {
+        switch (args[0]) {
+            case "-b":
+            case "--beautify":
+                args.shift();
+                options.beautify = true;
+                break;
+            case "-i":
+            case "--indent":
+                args.shift();
+                options.beautify_options.indent_level = args.shift();
+                break;
+            case "-q":
+            case "--quote-keys":
+                args.shift();
+                options.beautify_options.quote_keys = true;
+                break;
+            case "--no-mangle":
+            case "-nm":
+                args.shift();
+                options.mangle = false;
+                break;
+            case "--no-squeeze":
+            case "-ns":
+                args.shift();
+                options.squeeze = false;
+                break;
+            case "--no-copyright":
+            case "-nc":
+                args.shift();
+                options.show_copyright = false;
+                break;
+            case "-o":
+            case "--output":
+                args.shift();
+                options.output = args.shift();
+                break;
+            case "-v":
+            case "--verbose":
+                args.shift();
+                options.verbose = true;
+                break;
+            default:
+                break out;
+        }
+}
+
+var OUTPUT;
+
+if (options.output === true) {
+        OUTPUT = process.stdout;
+} else {
+        OUTPUT = fs.createWriteStream(options.output, {
+                flags: "w",
+                encoding: "utf8", // if we pass "utf8" here we get some garbage. :-\
+                mode: 0644
+        });
+}
+
+var filename = args[0];
+if (filename) {
+        fs.readFile(filename, "utf8", function(err, text){
+                OUTPUT.write(squeeze_it(text));
+                OUTPUT.end();
+        });
+} else {
+        var stdin = process.openStdin();
+        stdin.setEncoding("utf8");
+        var text = "";
+        stdin.on("data", function(chunk){
+                text += chunk;
+        });
+        stdin.on("end", function() {
+                OUTPUT.write(squeeze_it(text));
+                OUTPUT.end();
+        });
+}
+
+// --------- main ends here.
+
+function show_copyright(comments) {
+        var ret = "";
+        for (var i = 0; i < comments.length; ++i) {
+                var c = comments[i];
+                if (c.type == "comment1") {
+                        ret += "//" + c.value + "\n";
+                } else {
+                        ret += "/*" + c.value + "*/";
+                }
+        }
+        return ret;
+};
+
+function squeeze_it(code) {
+        var result = "";
+        if (options.show_copyright) {
+                var initial_comments = [];
+                // keep first comment
+                var tok = jsp.tokenizer(code, false), c;
+                c = tok();
+                while (/^comment/.test(c.type)) {
+                        initial_comments.push(c);
+                        c = tok();
+                }
+                result += show_copyright(initial_comments);
+        }
+        try {
+                var ast = time_it("parse", function(){ return jsp.parse(code); });
+                if (options.mangle)
+                        ast = time_it("mangle", function(){ return pro.ast_mangle(ast); });
+                if (options.squeeze)
+                        ast = time_it("squeeze", function(){ return pro.ast_squeeze(ast); });
+                result += time_it("generate", function(){ return pro.gen_code(ast, options.beautify && options.beautify_options) });
+                return result;
+        } catch(ex) {
+                sys.debug(ex.stack);
+                sys.debug(sys.inspect(ex));
+                sys.debug(JSON.stringify(ex));
+        }
+};
+
+function time_it(name, cont) {
+        if (!options.verbose)
+                return cont();
+        var t1 = new Date().getTime();
+        try { return cont(); }
+        finally { sys.debug("// " + name + ": " + ((new Date().getTime() - t1) / 1000).toFixed(3) + " sec."); }
+};
