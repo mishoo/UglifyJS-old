@@ -1,0 +1,6 @@
+{"name"    : "UglifyJS",
+ "author"  : "Mihai Bazon - http://github.com/mishoo",
+ "version" : "0.0.1",
+ "directories" : {"lib": "./lib"},
+ "bin"     : { "uglifyjs" : "./bin/uglifyjs" },
+}
