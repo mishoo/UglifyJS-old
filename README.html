@@ -7,7 +7,7 @@ lang="en" xml:lang="en">
 <title>UglifyJS -- a JavaScript parser/compressor/beautifier</title>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2010-08-15 15:42:00 CEST"/>
+<meta name="generated" content="2010-08-25 19:32:41 CEST"/>
 <meta name="author" content="Mihai Bazon"/>
 <meta name="description" content="a JavaScript parser/compressor/beautifier in JavaScript"/>
 <meta name="keywords" content="javascript, js, parser, compiler, compressor, mangle, minify, minifier"/>
@@ -83,7 +83,8 @@ lang="en" xml:lang="en">
 <ul>
 <li><a href="#sec-1_1">1.1 Usage </a>
 <ul>
-<li><a href="#sec-1_1_1">1.1.1 Beautifier shortcoming &ndash; no more comments </a></li>
+<li><a href="#sec-1_1_1">1.1.1 API </a></li>
+<li><a href="#sec-1_1_2">1.1.2 Beautifier shortcoming &ndash; no more comments </a></li>
 </ul>
 </li>
 <li><a href="#sec-1_2">1.2 Compression &ndash; how good is it? </a></li>
@@ -162,11 +163,20 @@ translate to 0.333333333333, so in this case we don't replace it.
 
 </li>
 <li>
+consecutive statements in blocks are merged into a sequence; in many
+cases, this leaves blocks with a single statement, so then we can remove
+the block brackets.
+
+</li>
+<li>
 various optimizations for IF statements:
 
 <ul>
 <li>
 if (foo) bar(); else baz(); ==&gt; foo?bar():baz();
+</li>
+<li>
+if (!foo) bar(); else baz(); ==&gt; foo?baz():bar();
 </li>
 <li>
 if (foo) bar(); ==&gt; foo&amp;&amp;bar();
@@ -195,15 +205,84 @@ if (foo) return bar(); else something(); ==&gt; {if(foo)return bar();something()
 
 
 <p>
-Take a look in <a href="../test/beautify.js">test/beautify.js</a>.  You can call that script passing a
-(JavaScript) file name, and it prints out the compressed version.  We don't
-really handle many options there, but you can easily write your own.
+There is a helper script now &mdash; <code>bin/uglifyjs</code> &mdash; that uses the library to
+compress a script using the maximum compression settings.  Synopsis:
 </p>
 
 
 
-<pre class="src src-espresso"><span style="color: #a020f0;">var</span> <span style="color: #b8860b;">jsp</span> = require(<span style="color: #bc8f8f;">"parse-js"</span>);
-<span style="color: #a020f0;">var</span> <span style="color: #b8860b;">pro</span> = require(<span style="color: #bc8f8f;">"process"</span>);
+<pre class="src src-sh">uglifyjs [ options... ] [ filename ]
+</pre>
+
+
+
+<p>
+Supported options:
+</p>
+<ul>
+<li>
+<code>-b</code> or <code>--beautify</code> &mdash; output indented code; when passed, additional
+options control the beautifier:
+
+<ul>
+<li>
+<code>-i N</code> or <code>--indent N</code> &mdash; indentation level (number of spaces)
+
+</li>
+<li>
+<code>-q</code> or <code>--quote-keys</code> &mdash; quote keys in literal objects (by default,
+only keys that cannot be identifier names will be quotes).
+
+</li>
+</ul>
+</li>
+<li>
+<code>-nm</code> or <code>--no-mangle</code> &mdash; don't mangle variable names
+
+</li>
+<li>
+<code>-ns</code> or <code>--no-squeeze</code> &mdash; don't call <code>ast_squeeze()</code> (which does various
+optimizations that result in smaller, less readable code)
+
+</li>
+<li>
+<code>--no-seqs</code> &mdash; when <code>ast_squeeze()</code> is called (default) it will reduce
+consecutive statements in blocks into a sequence.  For example, "a = 10; b
+= 20; foo();" will be written as "a=10,b=20,foo();".  In various
+occasions, this allows us to discard the block brackets (since the block
+becomes a single statement).  This is ON by default because it seems safe
+and saves a few hundred bytes on some libs that I tested it on.
+
+</li>
+<li>
+<code>-nc</code> or <code>--no-copyright</code> &mdash; by default, <code>uglifyjs</code> will keep the initial
+comment tokens in the generated code (assumed to be copyright information
+etc.).  If you pass this it will discard it.
+
+</li>
+<li>
+<code>-o filename</code> or <code>--output filename</code> &mdash; put the result in <code>filename</code>.  If
+this isn't given, the result goes to standard output.
+
+</li>
+</ul>
+
+</div>
+
+<div id="outline-container-1_1_1" class="outline-4">
+<h4 id="sec-1_1_1"><span class="section-number-4">1.1.1</span> API </h4>
+<div class="outline-text-4" id="text-1_1_1">
+
+
+<p>
+Symlink the <b>lib</b> directory as <b>~/.node_libraries/uglifyjs</b>, so that the
+<b>require</b> calls in the following sample will work:
+</p>
+
+
+
+<pre class="src src-espresso"><span style="color: #a020f0;">var</span> <span style="color: #b8860b;">jsp</span> = require(<span style="color: #bc8f8f;">"uglifyjs/parse-js"</span>);
+<span style="color: #a020f0;">var</span> <span style="color: #b8860b;">pro</span> = require(<span style="color: #bc8f8f;">"uglifyjs/process"</span>);
 
 <span style="color: #a020f0;">var</span> <span style="color: #b8860b;">orig_code</span> = <span style="color: #bc8f8f;">"... JS code here"</span>;
 <span style="color: #a020f0;">var</span> <span style="color: #b8860b;">ast</span> = jsp.parse(orig_code); <span style="color: #b22222;">// </span><span style="color: #b22222;">parse code and get the initial AST
@@ -241,9 +320,11 @@ argument it will compress them as well.
 
 </li>
 <li>
-<code>pro.ast_squeeze(ast)</code> &ndash; employs further optimizations designed to reduce
-the size of the code that <code>gen_code</code> would generate from the AST.  Returns
-a new AST.
+<code>pro.ast_squeeze(ast, options)</code> &ndash; employs further optimizations designed
+to reduce the size of the code that <code>gen_code</code> would generate from the
+AST.  Returns a new AST.  <code>options</code> can be a hash; for now the only
+supported option is make_seqs (default true) which will cause consecutive
+statements in a block to be merged using the "sequence" (comma) operator.
 
 </li>
 <li>
@@ -268,12 +349,13 @@ literal objects
 </ul>
 </li>
 </ul>
+</div>
 
 </div>
 
-<div id="outline-container-1_1_1" class="outline-4">
-<h4 id="sec-1_1_1"><span class="section-number-4">1.1.1</span> Beautifier shortcoming &ndash; no more comments </h4>
-<div class="outline-text-4" id="text-1_1_1">
+<div id="outline-container-1_1_2" class="outline-4">
+<h4 id="sec-1_1_2"><span class="section-number-4">1.1.2</span> Beautifier shortcoming &ndash; no more comments </h4>
+<div class="outline-text-4" id="text-1_1_2">
 
 
 <p>
@@ -327,15 +409,15 @@ Compression results:
 <tr><th scope="col">Library</th><th scope="col">Orig. size</th><th scope="col">UglifyJS</th><th scope="col">YUI</th><th scope="col">GCL</th></tr>
 </thead>
 <tbody>
-<tr><td>DynarchLIB</td><td>636896</td><td>242405</td><td>246452 (+4047)</td><td>240439 (-1966) (buggy)</td></tr>
-<tr><td>jQuery</td><td>163855</td><td>72261</td><td>79702  (+7441)</td><td>71858   (-403)</td></tr>
+<tr><td>DynarchLIB</td><td>636896</td><td>241441</td><td>246452 (+5011)</td><td>240439 (-1002) (buggy)</td></tr>
+<tr><td>jQuery</td><td>163855</td><td>72006</td><td>79702  (+7696)</td><td>71858   (-148)</td></tr>
 </tbody>
 </table>
 
 
 <p>
-UglifyJS is the fastest to run.  On my laptop UglifyJS takes 0.846s for
-DynarchLIB, while YUI takes 2.690s and GCL takes 7.143s.
+UglifyJS is the fastest to run.  On my laptop UglifyJS takes 1.35s for
+DynarchLIB, while YUI takes 2.7s and GCL takes 6.5s.
 </p>
 <p>
 GoogleClosure does a lot of smart ass optimizations.  I had to strive really
@@ -347,11 +429,11 @@ mangle names anyway; my DynarchLIB compiled with it is buggy because of
 this.
 </p>
 <p>
-UglifyJS consists of ~1000 lines of code for the tokenizer/parser, and ~900
+UglifyJS consists of ~1100 lines of code for the tokenizer/parser, and ~1100
 lines for the compressor and code generator.  That should make it very
 maintainable and easily extensible, so I would say it has a good place in
 this field and it's bound to become the de-facto standard JS minifier.  And
-I shall rule the world. :-) Use it, and spread the word!
+I shall rule the world. :-) Use it, and <b>spread the word</b>!
 </p>
 </div>
 
@@ -394,6 +476,12 @@ Project at GitHub: <a href="http://github.com/mishoo/UglifyJS">http://github.com
 </li>
 <li>
 Google Group: <a href="http://groups.google.com/group/uglifyjs">http://groups.google.com/group/uglifyjs</a>
+</li>
+<li>
+Common Lisp JS parser: <a href="http://marijn.haverbeke.nl/parse-js/">http://marijn.haverbeke.nl/parse-js/</a>
+</li>
+<li>
+JS-to-Lisp compiler: <a href="http://github.com/marijnh/js">http://github.com/marijnh/js</a>
 
 </li>
 </ul>
@@ -452,7 +540,7 @@ redistribute it freely, subject to the following restrictions:
 <div id="postamble">
 <p class="author"> Author: Mihai Bazon
 </p>
-<p class="date"> Date: 2010-08-15 15:42:00 CEST</p>
+<p class="date"> Date: 2010-08-25 19:32:41 CEST</p>
 <p class="creator">HTML generated by org-mode 6.36trans in emacs 23</p>
 </div>
 </div>
