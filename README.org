@@ -229,8 +229,8 @@ I'd love to hear about them ([[http://groups.google.com/group/uglifyjs][use the 
 
 - Project at GitHub: [[http://github.com/mishoo/UglifyJS][http://github.com/mishoo/UglifyJS]]
 - Google Group: [[http://groups.google.com/group/uglifyjs][http://groups.google.com/group/uglifyjs]]
-- Common Lisp JS parser: http://marijn.haverbeke.nl/parse-js/
-- JS-to-Lisp compiler: http://github.com/marijnh/js
+- Common Lisp JS parser: [[http://marijn.haverbeke.nl/parse-js/][http://marijn.haverbeke.nl/parse-js/]]
+- JS-to-Lisp compiler: [[http://github.com/marijnh/js][http://github.com/marijnh/js]]
 
 ** License
 
