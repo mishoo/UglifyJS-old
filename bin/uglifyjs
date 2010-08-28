@@ -8,6 +8,7 @@ var pro = require("uglifyjs/process");
 
 var options = {
         mangle: true,
+        mangle_toplevel: false,
         squeeze: true,
         make_seqs: true,
         beautify: false,
@@ -40,6 +41,11 @@ out: while (args.length > 0) {
             case "--quote-keys":
                 args.shift();
                 options.beautify_options.quote_keys = true;
+                break;
+            case "-mt":
+            case "--mangle-toplevel":
+                args.shift();
+                options.mangle_toplevel = true;
                 break;
             case "--no-mangle":
             case "-nm":
@@ -137,7 +143,7 @@ function squeeze_it(code) {
         try {
                 var ast = time_it("parse", function(){ return jsp.parse(code); });
                 if (options.mangle)
-                        ast = time_it("mangle", function(){ return pro.ast_mangle(ast); });
+                        ast = time_it("mangle", function(){ return pro.ast_mangle(ast, options.mangle_toplevel); });
                 if (options.squeeze)
                         ast = time_it("squeeze", function(){
                                 return pro.ast_squeeze(ast, {
