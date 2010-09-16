@@ -15,6 +15,7 @@ var options = {
         beautify: false,
         verbose: false,
         show_copyright: true,
+        out_same_file: false,
         beautify_options: {
                 indent_level: 4,
                 indent_start: 0,
@@ -25,84 +26,65 @@ var options = {
 };
 
 var args = jsp.slice(process.argv, 2);
+var filename;
 
 out: while (args.length > 0) {
-        switch (args[0]) {
+        var v = args.shift();
+        switch (v) {
             case "-b":
             case "--beautify":
-                args.shift();
                 options.beautify = true;
                 break;
             case "-i":
             case "--indent":
-                args.shift();
                 options.beautify_options.indent_level = args.shift();
                 break;
             case "-q":
             case "--quote-keys":
-                args.shift();
                 options.beautify_options.quote_keys = true;
                 break;
             case "-mt":
             case "--mangle-toplevel":
-                args.shift();
                 options.mangle_toplevel = true;
                 break;
             case "--no-mangle":
             case "-nm":
-                args.shift();
                 options.mangle = false;
                 break;
             case "--no-squeeze":
             case "-ns":
-                args.shift();
                 options.squeeze = false;
                 break;
             case "--no-seqs":
-                args.shift();
                 options.make_seqs = false;
                 break;
             case "--no-copyright":
             case "-nc":
-                args.shift();
                 options.show_copyright = false;
                 break;
             case "-o":
             case "--output":
-                args.shift();
                 options.output = args.shift();
+                break;
+            case "--overwrite":
+                options.out_same_file = true;
                 break;
             case "-v":
             case "--verbose":
-                args.shift();
                 options.verbose = true;
                 break;
             case "--ast":
-                args.shift();
                 options.ast = true;
                 break;
             default:
+                filename = v;
                 break out;
         }
 }
 
-var OUTPUT;
-
-if (options.output === true) {
-        OUTPUT = process.stdout;
-} else {
-        OUTPUT = fs.createWriteStream(options.output, {
-                flags: "w",
-                encoding: "utf8", // if we pass "utf8" here we get some garbage. :-\
-                mode: 0644
-        });
-}
-
-var filename = args[0];
 if (filename) {
         fs.readFile(filename, "utf8", function(err, text){
-                OUTPUT.write(squeeze_it(text));
-                OUTPUT.end();
+                output(squeeze_it(text));
         });
 } else {
         var stdin = process.openStdin();
@@ -112,10 +94,26 @@ if (filename) {
                 text += chunk;
         });
         stdin.on("end", function() {
-                OUTPUT.write(squeeze_it(text));
-                OUTPUT.end();
+                output(squeeze_it(text));
         });
 }
+
+function output(text) {
+        var out;
+        if (options.out_same_file && filename)
+                options.output = filename;
+        if (options.output === true) {
+                out = process.stdout;
+        } else {
+                out = fs.createWriteStream(options.output, {
+                        flags: "w",
+                        encoding: "utf8",
+                        mode: 0644
+                });
+        }
+        out.write(text);
+        out.end();
+};
 
 // --------- main ends here.
 
