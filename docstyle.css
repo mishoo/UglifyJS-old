@@ -16,6 +16,9 @@ pre {
   font-size: 90%;
   overflow:auto;
 }
+pre.src {
+  background-color: #333; color: #ffd; border: 1px solid #000;
+}
 table { border-collapse: collapse; }
 td, th { vertical-align: top; }
 dt { font-weight: bold; }

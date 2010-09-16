@@ -72,6 +72,10 @@ compress a script using the maximum compression settings.  Synopsis:
 uglifyjs [ options... ] [ filename ]
 #+END_SRC
 
+=filename= should be the last argument and should name the file from which
+to read the JavaScript code.  If you don't specify it, it will read code
+from STDIN.
+
 Supported options:
 
 - =-b= or =--beautify= --- output indented code; when passed, additional
@@ -85,21 +89,35 @@ Supported options:
 - =-nm= or =--no-mangle= --- don't mangle variable names
 
 - =-ns= or =--no-squeeze= --- don't call =ast_squeeze()= (which does various
-  optimizations that result in smaller, less readable code)
+  optimizations that result in smaller, less readable code).
 
-- =--no-seqs= --- when =ast_squeeze()= is called (default) it will reduce
-  consecutive statements in blocks into a sequence.  For example, "a = 10; b
-  = 20; foo();" will be written as "a=10,b=20,foo();".  In various
-  occasions, this allows us to discard the block brackets (since the block
-  becomes a single statement).  This is ON by default because it seems safe
-  and saves a few hundred bytes on some libs that I tested it on.
+- =-mt= or =--mangle-toplevel= --- mangle names in the toplevel scope too
+  (by default we don't do this).
+
+- =--no-seqs= --- when =ast_squeeze()= is called (thus, unless you pass
+  =--no-squeeze=) it will reduce consecutive statements in blocks into a
+  sequence.  For example, "a = 10; b = 20; foo();" will be written as
+  "a=10,b=20,foo();".  In various occasions, this allows us to discard the
+  block brackets (since the block becomes a single statement).  This is ON
+  by default because it seems safe and saves a few hundred bytes on some
+  libs that I tested it on, but pass =--no-seqs= to disable it.
 
 - =-nc= or =--no-copyright= --- by default, =uglifyjs= will keep the initial
   comment tokens in the generated code (assumed to be copyright information
   etc.).  If you pass this it will discard it.
 
 - =-o filename= or =--output filename= --- put the result in =filename=.  If
-  this isn't given, the result goes to standard output.
+  this isn't given, the result goes to standard output (or see next one).
+
+- =--overwrite= --- if the code is read from a file (not from STDIN) and you
+  pass =--overwrite= then the output will be written in the same file.
+
+- =--ast= --- pass this if you want to get the Abstract Syntax Tree instead
+  of JavaScript as output.  Useful for debugging or learning more about the
+  internals.
+
+- =-v= or =--verbose= --- output some notes on STDERR (for now just how long
+  each operation takes).
 
 *** API
 

@@ -7,7 +7,7 @@ lang="en" xml:lang="en">
 <title>UglifyJS -- a JavaScript parser/compressor/beautifier</title>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2010-08-25 19:35:21 CEST"/>
+<meta name="generated" content="2010-09-16 19:23:17 CEST"/>
 <meta name="author" content="Mihai Bazon"/>
 <meta name="description" content="a JavaScript parser/compressor/beautifier in JavaScript"/>
 <meta name="keywords" content="javascript, js, parser, compiler, compressor, mangle, minify, minifier"/>
@@ -217,6 +217,11 @@ compress a script using the maximum compression settings.  Synopsis:
 
 
 <p>
+<code>filename</code> should be the last argument and should name the file from which
+to read the JavaScript code.  If you don't specify it, it will read code
+from STDIN.
+</p>
+<p>
 Supported options:
 </p>
 <ul>
@@ -242,16 +247,22 @@ only keys that cannot be identifier names will be quotes).
 </li>
 <li>
 <code>-ns</code> or <code>--no-squeeze</code> &mdash; don't call <code>ast_squeeze()</code> (which does various
-optimizations that result in smaller, less readable code)
+optimizations that result in smaller, less readable code).
 
 </li>
 <li>
-<code>--no-seqs</code> &mdash; when <code>ast_squeeze()</code> is called (default) it will reduce
-consecutive statements in blocks into a sequence.  For example, "a = 10; b
-= 20; foo();" will be written as "a=10,b=20,foo();".  In various
-occasions, this allows us to discard the block brackets (since the block
-becomes a single statement).  This is ON by default because it seems safe
-and saves a few hundred bytes on some libs that I tested it on.
+<code>-mt</code> or <code>--mangle-toplevel</code> &mdash; mangle names in the toplevel scope too
+(by default we don't do this).
+
+</li>
+<li>
+<code>--no-seqs</code> &mdash; when <code>ast_squeeze()</code> is called (thus, unless you pass
+<code>--no-squeeze</code>) it will reduce consecutive statements in blocks into a
+sequence.  For example, "a = 10; b = 20; foo();" will be written as
+"a=10,b=20,foo();".  In various occasions, this allows us to discard the
+block brackets (since the block becomes a single statement).  This is ON
+by default because it seems safe and saves a few hundred bytes on some
+libs that I tested it on, but pass <code>--no-seqs</code> to disable it.
 
 </li>
 <li>
@@ -262,7 +273,23 @@ etc.).  If you pass this it will discard it.
 </li>
 <li>
 <code>-o filename</code> or <code>--output filename</code> &mdash; put the result in <code>filename</code>.  If
-this isn't given, the result goes to standard output.
+this isn't given, the result goes to standard output (or see next one).
+
+</li>
+<li>
+<code>--overwrite</code> &mdash; if the code is read from a file (not from STDIN) and you
+pass <code>--overwrite</code> then the output will be written in the same file.
+
+</li>
+<li>
+<code>--ast</code> &mdash; pass this if you want to get the Abstract Syntax Tree instead
+of JavaScript as output.  Useful for debugging or learning more about the
+internals.
+
+</li>
+<li>
+<code>-v</code> or <code>--verbose</code> &mdash; output some notes on STDERR (for now just how long
+each operation takes).
 
 </li>
 </ul>
@@ -281,14 +308,14 @@ Symlink the <b>lib</b> directory as <b>~/.node_libraries/uglifyjs</b>, so that t
 
 
 
-<pre class="src src-espresso"><span style="color: #a020f0;">var</span> <span style="color: #b8860b;">jsp</span> = require(<span style="color: #bc8f8f;">"uglifyjs/parse-js"</span>);
-<span style="color: #a020f0;">var</span> <span style="color: #b8860b;">pro</span> = require(<span style="color: #bc8f8f;">"uglifyjs/process"</span>);
+<pre class="src src-espresso"><span style="color: #00ffff;">var</span> <span style="color: #eedd82;">jsp</span> = require(<span style="color: #ffa07a;">"uglifyjs/parse-js"</span>);
+<span style="color: #00ffff;">var</span> <span style="color: #eedd82;">pro</span> = require(<span style="color: #ffa07a;">"uglifyjs/process"</span>);
 
-<span style="color: #a020f0;">var</span> <span style="color: #b8860b;">orig_code</span> = <span style="color: #bc8f8f;">"... JS code here"</span>;
-<span style="color: #a020f0;">var</span> <span style="color: #b8860b;">ast</span> = jsp.parse(orig_code); <span style="color: #b22222;">// </span><span style="color: #b22222;">parse code and get the initial AST
-</span>ast = pro.ast_mangle(ast); <span style="color: #b22222;">// </span><span style="color: #b22222;">get a new AST with mangled names
-</span>ast = pro.ast_squeeze(ast); <span style="color: #b22222;">// </span><span style="color: #b22222;">get an AST with compression optimizations
-</span><span style="color: #a020f0;">var</span> <span style="color: #b8860b;">final_code</span> = pro.gen_code(ast); <span style="color: #b22222;">// </span><span style="color: #b22222;">compressed code here
+<span style="color: #00ffff;">var</span> <span style="color: #eedd82;">orig_code</span> = <span style="color: #ffa07a;">"... JS code here"</span>;
+<span style="color: #00ffff;">var</span> <span style="color: #eedd82;">ast</span> = jsp.parse(orig_code); <span style="color: #ff4500;">// </span><span style="color: #ff4500;">parse code and get the initial AST
+</span>ast = pro.ast_mangle(ast); <span style="color: #ff4500;">// </span><span style="color: #ff4500;">get a new AST with mangled names
+</span>ast = pro.ast_squeeze(ast); <span style="color: #ff4500;">// </span><span style="color: #ff4500;">get an AST with compression optimizations
+</span><span style="color: #00ffff;">var</span> <span style="color: #eedd82;">final_code</span> = pro.gen_code(ast); <span style="color: #ff4500;">// </span><span style="color: #ff4500;">compressed code here
 </span></pre>
 
 
@@ -540,7 +567,7 @@ redistribute it freely, subject to the following restrictions:
 <div id="postamble">
 <p class="author"> Author: Mihai Bazon
 </p>
-<p class="date"> Date: 2010-08-25 19:35:21 CEST</p>
+<p class="date"> Date: 2010-09-16 19:23:17 CEST</p>
 <p class="creator">HTML generated by org-mode 6.36trans in emacs 23</p>
 </div>
 </div>
