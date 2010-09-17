@@ -25,7 +25,7 @@ var options = {
         output: true            // stdout
 };
 
-var args = jsp.slice(process.argv, 2);
+var args = process.argv.slice(2);
 var filename;
 
 out: while (args.length > 0) {
