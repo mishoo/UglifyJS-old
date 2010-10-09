@@ -7,7 +7,7 @@ lang="en" xml:lang="en">
 <title>UglifyJS -- a JavaScript parser/compressor/beautifier</title>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2010-09-16 19:23:17 CEST"/>
+<meta name="generated" content="2010-10-09 18:16:35 CEST"/>
 <meta name="author" content="Mihai Bazon"/>
 <meta name="description" content="a JavaScript parser/compressor/beautifier in JavaScript"/>
 <meta name="keywords" content="javascript, js, parser, compiler, compressor, mangle, minify, minifier"/>
@@ -193,9 +193,19 @@ if (foo) return bar(); else something(); ==&gt; {if(foo)return bar();something()
 </li>
 </ul>
 </li>
+<li>
+remove some unreachable code and warn about it (code that follows a
+<code>return</code>, <code>throw</code>, <code>break</code> or <code>continue</code> statement, except
+function/variable declarations).
+
+</li>
 </ul>
 </li>
 </ul>
+
+<p>( See <a href="http://github.com/mishoo/cl-uglify-js">cl-uglify-js</a> if you're looking for the Common Lisp version of
+UglifyJS. )
+</p>
 
 </div>
 
@@ -266,6 +276,13 @@ libs that I tested it on, but pass <code>--no-seqs</code> to disable it.
 
 </li>
 <li>
+<code>--no-dead-code</code> &mdash; by default, UglifyJS will remove code that is
+obviously unreachable (code that follows a <code>return</code>, <code>throw</code>, <code>break</code> or
+<code>continue</code> statement and is not a function/variable declaration).  Pass
+this option to disable this optimization.
+
+</li>
+<li>
 <code>-nc</code> or <code>--no-copyright</code> &mdash; by default, <code>uglifyjs</code> will keep the initial
 comment tokens in the generated code (assumed to be copyright information
 etc.).  If you pass this it will discard it.
@@ -308,14 +325,14 @@ Symlink the <b>lib</b> directory as <b>~/.node_libraries/uglifyjs</b>, so that t
 
 
 
-<pre class="src src-espresso"><span style="color: #00ffff;">var</span> <span style="color: #eedd82;">jsp</span> = require(<span style="color: #ffa07a;">"uglifyjs/parse-js"</span>);
-<span style="color: #00ffff;">var</span> <span style="color: #eedd82;">pro</span> = require(<span style="color: #ffa07a;">"uglifyjs/process"</span>);
+<pre class="src src-espresso"><span style="color: #afeeee; font-weight: bold;">var</span> <span style="color: #40e0d0; font-weight: bold;">jsp</span> = require(<span style="color: #87cefa;">"uglifyjs/parse-js"</span>);
+<span style="color: #afeeee; font-weight: bold;">var</span> <span style="color: #40e0d0; font-weight: bold;">pro</span> = require(<span style="color: #87cefa;">"uglifyjs/process"</span>);
 
-<span style="color: #00ffff;">var</span> <span style="color: #eedd82;">orig_code</span> = <span style="color: #ffa07a;">"... JS code here"</span>;
-<span style="color: #00ffff;">var</span> <span style="color: #eedd82;">ast</span> = jsp.parse(orig_code); <span style="color: #ff4500;">// </span><span style="color: #ff4500;">parse code and get the initial AST
-</span>ast = pro.ast_mangle(ast); <span style="color: #ff4500;">// </span><span style="color: #ff4500;">get a new AST with mangled names
-</span>ast = pro.ast_squeeze(ast); <span style="color: #ff4500;">// </span><span style="color: #ff4500;">get an AST with compression optimizations
-</span><span style="color: #00ffff;">var</span> <span style="color: #eedd82;">final_code</span> = pro.gen_code(ast); <span style="color: #ff4500;">// </span><span style="color: #ff4500;">compressed code here
+<span style="color: #afeeee; font-weight: bold;">var</span> <span style="color: #40e0d0; font-weight: bold;">orig_code</span> = <span style="color: #87cefa;">"... JS code here"</span>;
+<span style="color: #afeeee; font-weight: bold;">var</span> <span style="color: #40e0d0; font-weight: bold;">ast</span> = jsp.parse(orig_code); <span style="color: #add8e6;">// </span><span style="color: #add8e6;">parse code and get the initial AST
+</span>ast = pro.ast_mangle(ast); <span style="color: #add8e6;">// </span><span style="color: #add8e6;">get a new AST with mangled names
+</span>ast = pro.ast_squeeze(ast); <span style="color: #add8e6;">// </span><span style="color: #add8e6;">get an AST with compression optimizations
+</span><span style="color: #afeeee; font-weight: bold;">var</span> <span style="color: #40e0d0; font-weight: bold;">final_code</span> = pro.gen_code(ast); <span style="color: #add8e6;">// </span><span style="color: #add8e6;">compressed code here
 </span></pre>
 
 
@@ -349,10 +366,20 @@ argument it will compress them as well.
 <li>
 <code>pro.ast_squeeze(ast, options)</code> &ndash; employs further optimizations designed
 to reduce the size of the code that <code>gen_code</code> would generate from the
-AST.  Returns a new AST.  <code>options</code> can be a hash; for now the only
-supported option is make_seqs (default true) which will cause consecutive
-statements in a block to be merged using the "sequence" (comma) operator.
+AST.  Returns a new AST.  <code>options</code> can be a hash; the supported options
+are:
 
+<ul>
+<li>
+<code>make_seqs</code> (default true) which will cause consecutive statements in a
+block to be merged using the "sequence" (comma) operator
+
+</li>
+<li>
+<code>dead_code</code> (default true) which will remove unreachable code.
+
+</li>
+</ul>
 </li>
 <li>
 <code>pro.gen_code(ast, beautify)</code> &ndash; generates JS code from the AST.  By
@@ -408,6 +435,9 @@ the processing stages.
 <div class="outline-text-3" id="text-1_2">
 
 
+<p>
+(XXX: this is somewhat outdated)
+</p>
 <p>
 There are a few popular JS minifiers nowadays &ndash; the two most well known
 being the GoogleClosure (GCL) compiler and the YUI compressor.  For some
@@ -509,6 +539,9 @@ Common Lisp JS parser: <a href="http://marijn.haverbeke.nl/parse-js/">http://mar
 </li>
 <li>
 JS-to-Lisp compiler: <a href="http://github.com/marijnh/js">http://github.com/marijnh/js</a>
+</li>
+<li>
+Common Lisp JS uglifier: <a href="http://github.com/mishoo/cl-uglify-js">http://github.com/mishoo/cl-uglify-js</a>
 
 </li>
 </ul>
@@ -567,7 +600,7 @@ redistribute it freely, subject to the following restrictions:
 <div id="postamble">
 <p class="author"> Author: Mihai Bazon
 </p>
-<p class="date"> Date: 2010-09-16 19:23:17 CEST</p>
+<p class="date"> Date: 2010-10-09 18:16:35 CEST</p>
 <p class="creator">HTML generated by org-mode 6.36trans in emacs 23</p>
 </div>
 </div>
