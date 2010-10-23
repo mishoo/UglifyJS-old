@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 // -*- js2 -*-
 
-global.sys = require("sys");
+global.sys = require(/^0\.2/.test(process.version) ? "sys" : "util");
 var fs = require("fs");
 var jsp = require("uglifyjs/parse-js"); // symlink ~/.node_libraries/uglifyjs => /path/to/../lib/
 var pro = require("uglifyjs/process");
