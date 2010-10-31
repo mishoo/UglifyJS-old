@@ -202,7 +202,8 @@ the processing stages.
 
 ** Compression -- how good is it?
 
-(XXX: this is somewhat outdated)
+(XXX: this is somewhat outdated.  On the jQuery source code we beat Closure
+by 168 bytes (560 after gzip) and by many seconds.)
 
 There are a few popular JS minifiers nowadays -- the two most well known
 being the GoogleClosure (GCL) compiler and the YUI compressor.  For some
