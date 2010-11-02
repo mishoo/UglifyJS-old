@@ -1,1 +1,1 @@
-e=d=c=b=a=1
+e=d=c=b=a=1;if((longname=2)+1)if(x=3)var z=7
