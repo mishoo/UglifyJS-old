@@ -1,8 +1,9 @@
 var fs = require('fs'),
-	jsp = require('uglifyjs/parse-js'),
+	uglify = require('uglify-js'),
+	jsp = uglify.parser,
 	nodeunit = require('nodeunit'),
 	path = require('path'),
-	pro = require('uglifyjs/process');
+	pro = uglify.uglify;
 
 var Script = process.binding('evals').Script;
 

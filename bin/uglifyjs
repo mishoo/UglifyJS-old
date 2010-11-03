@@ -3,8 +3,9 @@
 
 global.sys = require(/^v0\.[012]/.test(process.version) ? "sys" : "util");
 var fs = require("fs");
-var jsp = require("uglifyjs/parse-js"); // symlink ~/.node_libraries/uglifyjs => /path/to/../lib/
-var pro = require("uglifyjs/process");
+var uglify = require("uglify-js"), // symlink ~/.node_libraries/uglify-js.js to ../uglify-js.js
+    jsp = uglify.parser,
+    pro = uglify.uglify;
 
 var options = {
         ast: false,
