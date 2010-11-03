@@ -141,8 +141,10 @@ function squeeze_it(code) {
                 // keep first comment
                 var tok = jsp.tokenizer(code, false), c;
                 c = tok();
-                while (/^comment/.test(c.type)) {
+                var prev = null;
+                while (/^comment/.test(c.type) && (!prev || prev == c.type)) {
                         initial_comments.push(c);
+                        prev = c.type;
                         c = tok();
                 }
                 result += show_copyright(initial_comments);
