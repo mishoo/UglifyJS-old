@@ -12,7 +12,7 @@ var scriptsPath = __dirname;
 function compress(code) {
 	var ast = jsp.parse(code);
 	ast = pro.ast_mangle(ast);
-	ast = pro.ast_squeeze(ast, {no_warnings: true});
+	ast = pro.ast_squeeze(ast, {no_warnings: true, extra: true});
 	return pro.gen_code(ast);
 }
 
@@ -38,7 +38,7 @@ module.exports = nodeunit.testCase({
 
 			// Check if the compressed output is what is expected
 			var expected = fs.readFileSync(expectedPath, 'utf-8');
-			test.equal(outputCompress, expected);
+			test.equal(outputCompress, expected.replace(/(\r?\n)+$/, ""));
 		}
 		test.done();
 	}
