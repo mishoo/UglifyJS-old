@@ -131,6 +131,10 @@ Supported options:
 - =-v= or =--verbose= --- output some notes on STDERR (for now just how long
   each operation takes).
 
+- =--extra= --- enable additional optimizations that have not yet been
+  extensively tested.  These might, or might not, break your code.  If you
+  find a bug using this option, please report a test case.
+
 *** API
 
 Symlink the *lib* directory as *~/.node\_libraries/uglifyjs*, so that the

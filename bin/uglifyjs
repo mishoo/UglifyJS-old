@@ -18,6 +18,7 @@ var options = {
         verbose: false,
         show_copyright: true,
         out_same_file: false,
+        extra: false,
         beautify_options: {
                 indent_level: 4,
                 indent_start: 0,
@@ -80,6 +81,9 @@ out: while (args.length > 0) {
                 break;
             case "--ast":
                 options.ast = true;
+                break;
+            case "--extra":
+                options.extra = true;
                 break;
             default:
                 filename = v;
@@ -155,8 +159,9 @@ function squeeze_it(code) {
                 if (options.squeeze)
                         ast = time_it("squeeze", function(){
                                 return pro.ast_squeeze(ast, {
-                                        make_seqs: options.make_seqs,
-                                        dead_code: options.dead_code
+                                        make_seqs : options.make_seqs,
+                                        dead_code : options.dead_code,
+                                        extra     : options.extra
                                 });
                         });
                 if (options.mangle)
