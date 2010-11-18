@@ -135,6 +135,12 @@ Supported options:
   extensively tested.  These might, or might not, break your code.  If you
   find a bug using this option, please report a test case.
 
+- =--unsafe= --- enable other additional optimizations that are known to be
+  unsafe in some contrived situations, but could still be generally useful.
+  For now only this:
+
+  - foo.toString()  ==>  foo+""
+
 *** API
 
 Symlink the *lib* directory as *~/.node\_libraries/uglifyjs*, so that the

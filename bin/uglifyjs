@@ -19,6 +19,7 @@ var options = {
         show_copyright: true,
         out_same_file: false,
         extra: false,
+        unsafe: false,            // XXX: extra & unsafe?  but maybe we don't want both, so....
         beautify_options: {
                 indent_level: 4,
                 indent_start: 0,
@@ -84,6 +85,9 @@ out: while (args.length > 0) {
                 break;
             case "--extra":
                 options.extra = true;
+                break;
+            case "--unsafe":
+                options.unsafe = true;
                 break;
             default:
                 filename = v;
@@ -158,11 +162,14 @@ function squeeze_it(code) {
                 var ast = time_it("parse", function(){ return jsp.parse(code); });
                 if (options.squeeze)
                         ast = time_it("squeeze", function(){
-                                return pro.ast_squeeze(ast, {
+                                ast = pro.ast_squeeze(ast, {
                                         make_seqs : options.make_seqs,
                                         dead_code : options.dead_code,
                                         extra     : options.extra
                                 });
+                                if (options.unsafe)
+                                        ast = pro.ast_squeeze_more(ast);
+                                return ast;
                         });
                 if (options.mangle)
                         ast = time_it("mangle", function(){ return pro.ast_mangle(ast, options.mangle_toplevel); });
