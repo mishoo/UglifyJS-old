@@ -7,6 +7,10 @@ var uglify = require("uglify-js"), // symlink ~/.node_libraries/uglify-js.js to 
     jsp = uglify.parser,
     pro = uglify.uglify;
 
+pro.set_logger(function(msg){
+        sys.debug(msg);
+});
+
 var options = {
         ast: false,
         mangle: true,
