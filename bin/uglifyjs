@@ -164,6 +164,8 @@ function squeeze_it(code) {
         }
         try {
                 var ast = time_it("parse", function(){ return jsp.parse(code); });
+                if (options.mangle)
+                        ast = time_it("mangle", function(){ return pro.ast_mangle(ast, options.mangle_toplevel); });
                 if (options.squeeze)
                         ast = time_it("squeeze", function(){
                                 ast = pro.ast_squeeze(ast, {
@@ -175,8 +177,6 @@ function squeeze_it(code) {
                                         ast = pro.ast_squeeze_more(ast);
                                 return ast;
                         });
-                if (options.mangle)
-                        ast = time_it("mangle", function(){ return pro.ast_mangle(ast, options.mangle_toplevel); });
                 if (options.ast)
                         return sys.inspect(ast, null, null);
                 result += time_it("generate", function(){ return pro.gen_code(ast, options.beautify && options.beautify_options) });
