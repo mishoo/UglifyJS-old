@@ -209,6 +209,11 @@ Supported options:
 
   - foo.toString()  ==>  foo+""
 
+- =--max-line-len= (default 32K characters) --- add a newline after around
+  32K characters.  I've seen both FF and Chrome croak when all the code was
+  on a single line of around 670K.  Pass --max-line-len 0 to disable this
+  safety feature.
+
 *** API
 
 Symlink the *lib* directory as *~/.node\_libraries/uglifyjs*, so that the
