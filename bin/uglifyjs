@@ -185,7 +185,7 @@ function squeeze_it(code) {
                         return sys.inspect(ast, null, null);
                 result += time_it("generate", function(){ return pro.gen_code(ast, options.beautify && options.beautify_options) });
                 if (!options.beautify && options.max_line_length) {
-                        result = time_it("split", function(){ return split_lines(result) });
+                        result = time_it("split", function(){ return pro.split_lines(result, options.max_line_length) });
                 }
                 return result;
         } catch(ex) {
@@ -201,51 +201,4 @@ function time_it(name, cont) {
         var t1 = new Date().getTime();
         try { return cont(); }
         finally { sys.debug("// " + name + ": " + ((new Date().getTime() - t1) / 1000).toFixed(3) + " sec."); }
-};
-
-function split_lines(code) {
-        var next_token = jsp.tokenizer(code, false);
-        var last_split = 0;
-        var this_token;
-        var prev_token;
-        var was_split;
-        var splits = [ 0 ];
-        function current_length() {
-                return this_token.pos - last_split;
-        };
-        function split_here() {
-                was_split = true;
-                last_split = this_token.pos;
-                splits.push(last_split);
-        };
-        while (true) {
-                prev_token = this_token;
-                this_token = next_token();
-                if (this_token.type == "eof") break;
-                // don't split if the previos token was a keyword.
-                // this should shield us from the "no newline allowed after return" etc.
-                was_split = false;
-                if (prev_token) {
-                        if (prev_token.type == "keyword") {
-                                continue;
-                        }
-                        if (prev_token.type == "comment1") {
-                                last_split = this_token.pos;
-                                continue;
-                        }
-                }
-                if (current_length() > options.max_line_length) {
-                        switch (this_token.type) {
-                            case "keyword":
-                            case "atom":
-                            case "name":
-                            case "punc":
-                                split_here();
-                                break;
-                        }
-                }
-        }
-        return splits.map(function(pos, i){
-                return code.substring(pos, splits[i + 1] || code.length);
-        }).join("\n");
 };
