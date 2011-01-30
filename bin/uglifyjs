@@ -133,7 +133,9 @@ function output(text) {
                 });
         }
         out.write(text);
-        out.end();
+        if (options.output !== true) {
+                out.end();
+        }
 };
 
 // --------- main ends here.
