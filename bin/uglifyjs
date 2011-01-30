@@ -95,7 +95,7 @@ out: while (args.length > 0) {
                 options.unsafe = true;
                 break;
             case "--max-line-len":
-                options.max_line_length = args.shift();
+                options.max_line_length = parseInt(args.shift(), 10);
                 break;
             default:
                 filename = v;
