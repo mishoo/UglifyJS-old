@@ -156,17 +156,9 @@ function show_copyright(comments) {
 function squeeze_it(code) {
         var result = "";
         if (options.show_copyright) {
-                var initial_comments = [];
-                // keep first comment
-                var tok = jsp.tokenizer(code, false), c;
+                var tok = jsp.tokenizer(code), c;
                 c = tok();
-                var prev = null;
-                while (/^comment/.test(c.type) && (!prev || prev == c.type)) {
-                        initial_comments.push(c);
-                        prev = c.type;
-                        c = tok();
-                }
-                result += show_copyright(initial_comments);
+                result += show_copyright(c.comments_before);
         }
         try {
                 var ast = time_it("parse", function(){ return jsp.parse(code); });
