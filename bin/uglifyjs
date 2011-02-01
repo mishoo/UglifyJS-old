@@ -105,6 +105,7 @@ out: while (args.length > 0) {
 
 if (filename) {
         fs.readFile(filename, "utf8", function(err, text){
+                if (err) throw err;
                 output(squeeze_it(text));
         });
 } else {
