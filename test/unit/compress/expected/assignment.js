@@ -1,1 +1,1 @@
-e=d=c=b=a=1;if((longname=2)+1)if(x=3)var z=7;x=y=z=1,h=g+=1,j=++i,j=++i+17
+a=1,b=a,c=1,d=b,e=d,longname=2;if(longname+1){x=3;if(x)var z=7}z=1,y=1,x=1,g+=1,h=g,++i,j=i,i++,j=i+17

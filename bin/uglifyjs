@@ -23,8 +23,7 @@ var options = {
         show_copyright: true,
         out_same_file: false,
         max_line_length: 32 * 1024,
-        extra: false,
-        unsafe: false,            // XXX: extra & unsafe?  but maybe we don't want both, so....
+        unsafe: false,
         beautify_options: {
                 indent_level: 4,
                 indent_start: 0,
@@ -87,9 +86,6 @@ out: while (args.length > 0) {
                 break;
             case "--ast":
                 options.ast = true;
-                break;
-            case "--extra":
-                options.extra = true;
                 break;
             case "--unsafe":
                 options.unsafe = true;
@@ -169,8 +165,7 @@ function squeeze_it(code) {
                         ast = time_it("squeeze", function(){
                                 ast = pro.ast_squeeze(ast, {
                                         make_seqs : options.make_seqs,
-                                        dead_code : options.dead_code,
-                                        extra     : options.extra
+                                        dead_code : options.dead_code
                                 });
                                 if (options.unsafe)
                                         ast = pro.ast_squeeze_more(ast);
