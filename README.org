@@ -214,6 +214,11 @@ Supported options:
   on a single line of around 670K.  Pass --max-line-len 0 to disable this
   safety feature.
 
+- =--reserved-names= --- some libraries rely on certain names to be used, as
+  pointed out in issue #92 and #81, so this option allow you to exclude such
+  names from the mangler.  For example, to keep names =require= and =$super=
+  intact you'd specify --reserved-names "require,$super".
+
 *** API
 
 Symlink the *lib* directory as *~/.node\_libraries/uglifyjs*, so that the
