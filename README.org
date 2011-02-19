@@ -249,10 +249,12 @@ Some of these functions take optional arguments.  Here's a description:
   it doesn't find it.  For most JS code you don't want that, but it's useful
   if you want to strictly sanitize your code.
 
-- =pro.ast_mangle(ast, do_toplevel)= -- generates a new AST containing mangled
-  (compressed) variable and function names.  By default it doesn't touch the
-  names defined in the toplevel scope, but if you pass =true= as second
-  argument it will compress them as well.
+- =pro.ast_mangle(ast, options)= -- generates a new AST containing mangled
+  (compressed) variable and function names.  It supports the following
+  options:
+
+  - =toplevel= -- mangle toplevel names (by default we don't touch them).
+  - =except= -- an array of names to exclude from compression.
 
 - =pro.ast_squeeze(ast, options)= -- employs further optimizations designed
   to reduce the size of the code that =gen_code= would generate from the
