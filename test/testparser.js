@@ -283,15 +283,15 @@ function ParserTestSuite(callback){
 		["for (var x=function(){a+b;}; a<b; ++i) some;", "11 for statement, testing for parsingForHeader reset with the function"],
 		["for (var x=function(){for (x=0; x<15; ++x) alert(foo); }; a<b; ++i) some;", "11 for statement, testing for parsingForHeader reset with the function"],
 		// flow statements
-		["continue;", "1 flow statement"],
-		["continue label;", "2 flow statement"],
-		["break;", "3 flow statement"],
-		["break somewhere;", "4 flow statement"],
-		["continue /* comment */ ;", "5 flow statement"],
-		["continue \n;", "6 flow statement"],
-		["return;", "7 flow statement"],
-		["return 0;", "8 flow statement"],
-		["return 0 + \n 1;", "9 flow statement"],
+		["while(1){ continue; }", "1 flow statement"],
+		["label: while(1){ continue label; }", "2 flow statement"],
+		["while(1){ break; }", "3 flow statement"],
+		["somewhere: while(1){ break somewhere; }", "4 flow statement"],
+		["while(1){ continue /* comment */ ; }", "5 flow statement"],
+		["while(1){ continue \n; }", "6 flow statement"],
+		["(function(){ return; })()", "7 flow statement"],
+		["(function(){ return 0; })()", "8 flow statement"],
+		["(function(){ return 0 + \n 1; })()", "9 flow statement"],
 		// with
 		["with (e) s;", "with statement"],
 		// switch
@@ -328,16 +328,19 @@ function ParserTestSuite(callback){
 		["x;\n/*foo*/\n	;", "5 program"],
 
 		// asi
-		["continue \n foo;", "1 asi"],
-		["break \n foo;", "2 asi"],
-		["return\nfoo;", "3 asi"],
+		["foo: while(1){ continue \n foo; }", "1 asi"],
+		["foo: while(1){ break \n foo; }", "2 asi"],
+		["(function(){ return\nfoo; })()", "3 asi"],
 		["var x; { 1 \n 2 } 3", "4 asi"],
 		["ab 	 /* hi */\ncd", "5 asi"],
 		["ab/*\n*/cd", "6 asi (multi line multilinecomment counts as eol)"],
-		["continue /* wtf \n busta */ foo;", "7 asi illegal with multi line comment"],
+		["foo: while(1){ continue /* wtf \n busta */ foo; }", "7 asi illegal with multi line comment"],
 		["function f() { s }", "8 asi"],
 		["function f() { return }", "9 asi"],
+
 		// use strict
+                // XXX: some of these should actually fail?
+                //      no support for "use strict" yet...
 		['"use strict"; \'bla\'\n; foo;', "1 directive"],
 		['(function() { "use strict"; \'bla\';\n foo; });', "2 directive"],
 		['"use\\n strict";', "3 directive"],
