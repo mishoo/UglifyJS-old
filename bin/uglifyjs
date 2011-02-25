@@ -105,6 +105,10 @@ if (options.verbose) {
         });
 }
 
+jsp.set_logger(function(msg){
+        sys.debug(msg);
+});
+
 if (filename) {
         fs.readFile(filename, "utf8", function(err, text){
                 if (err) throw err;
