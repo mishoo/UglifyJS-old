@@ -14,14 +14,15 @@ var options = {
         squeeze: true,
         make_seqs: true,
         dead_code: true,
-        beautify: false,
         verbose: false,
         show_copyright: true,
         out_same_file: false,
         max_line_length: 32 * 1024,
         unsafe: false,
         reserved_names: null,
-        beautify_options: {
+        codegen_options: {
+                ascii_only: false,
+                beautify: false,
                 indent_level: 4,
                 indent_start: 0,
                 quote_keys: false,
@@ -38,15 +39,15 @@ out: while (args.length > 0) {
         switch (v) {
             case "-b":
             case "--beautify":
-                options.beautify = true;
+                options.codegen_options.beautify = true;
                 break;
             case "-i":
             case "--indent":
-                options.beautify_options.indent_level = args.shift();
+                options.codegen_options.indent_level = args.shift();
                 break;
             case "-q":
             case "--quote-keys":
-                options.beautify_options.quote_keys = true;
+                options.codegen_options.quote_keys = true;
                 break;
             case "-mt":
             case "--mangle-toplevel":
@@ -92,6 +93,9 @@ out: while (args.length > 0) {
                 break;
             case "--reserved-names":
                 options.reserved_names = args.shift().split(",");
+                break;
+            case "--ascii":
+                options.codegen_options.ascii_only = true;
                 break;
             default:
                 filename = v;
@@ -187,8 +191,8 @@ function squeeze_it(code) {
                 });
                 if (options.ast)
                         return sys.inspect(ast, null, null);
-                result += time_it("generate", function(){ return pro.gen_code(ast, options.beautify && options.beautify_options) });
-                if (!options.beautify && options.max_line_length) {
+                result += time_it("generate", function(){ return pro.gen_code(ast, options.codegen_options) });
+                if (!options.codegen_options.beautify && options.max_line_length) {
                         result = time_it("split", function(){ return pro.split_lines(result, options.max_line_length) });
                 }
                 return result;

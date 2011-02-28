@@ -161,6 +161,11 @@ Supported options:
   - =-q= or =--quote-keys= --- quote keys in literal objects (by default,
     only keys that cannot be identifier names will be quotes).
 
+- =--ascii= --- pass this argument to encode non-ASCII characters as
+  =\uXXXX= sequences.  By default UglifyJS won't bother to do it and will
+  output Unicode characters instead.  (the output is always encoded in UTF8,
+  but if you pass this option you'll only get ASCII).
+
 - =-nm= or =--no-mangle= --- don't mangle variable names
 
 - =-ns= or =--no-squeeze= --- don't call =ast_squeeze()= (which does various
