@@ -271,16 +271,23 @@ Some of these functions take optional arguments.  Here's a description:
 
   - =dead_code= (default true) which will remove unreachable code.
 
-- =pro.gen_code(ast, beautify)= -- generates JS code from the AST.  By
-  default it's minified, but if you pass =true= for the second argument it
-  will be nicely formatted and indented.  Additionally, you can control the
-  behavior by passing a hash for =beautify=, where the following options are
-  supported (below you can see the default values):
+- =pro.gen_code(ast, options)= -- generates JS code from the AST.  By
+  default it's minified, but using the =options= argument you can get nicely
+  formatted output.  =options= is, well, optional :-) and if you pass it it
+  must be an object and supports the following properties (below you can see
+  the default values):
 
-  - =indent_start: 0= -- initial indentation in spaces
-  - =indent_level: 4= -- indentation level, in spaces (pass an even number)
+  - =beautify: false= -- pass =true= if you want indented output
+  - =indent_start: 0= (only applies when =beautify= is =true=) -- initial
+    indentation in spaces
+  - =indent_level: 4= (only applies when =beautify= is =true=) --
+    indentation level, in spaces (pass an even number)
   - =quote_keys: false= -- if you pass =true= it will quote all keys in
     literal objects
+  - =space_colon: false= (only applies when =beautify= is =true=) -- wether
+    to put a space before the colon in object literals
+  - =ascii_only: false= -- pass =true= if you want to encode non-ASCII
+    characters as =\uXXXX=.
 
 *** Beautifier shortcoming -- no more comments
 
