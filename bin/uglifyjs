@@ -1,5 +1,5 @@
 #! /usr/bin/env node
-// -*- js2 -*-
+// -*- js -*-
 
 global.sys = require(/^v0\.[012]/.test(process.version) ? "sys" : "util");
 var fs = require("fs");

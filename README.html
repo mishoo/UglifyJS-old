@@ -7,7 +7,7 @@ lang="en" xml:lang="en">
 <title>UglifyJS -- a JavaScript parser/compressor/beautifier</title>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2011-02-28 22:35:00 EET"/>
+<meta name="generated" content="2011-04-04 00:07:13 EEST"/>
 <meta name="author" content="Mihai Bazon"/>
 <meta name="description" content="a JavaScript parser/compressor/beautifier in JavaScript"/>
 <meta name="keywords" content="javascript, js, parser, compiler, compressor, mangle, minify, minifier"/>
@@ -87,16 +87,18 @@ lang="en" xml:lang="en">
 <li><a href="#sec-1_1_1">1.1.1 Calls involving the global Array constructor </a></li>
 </ul>
 </li>
-<li><a href="#sec-1_2">1.2 Usage </a>
+<li><a href="#sec-1_2">1.2 Install (NPM) </a></li>
+<li><a href="#sec-1_3">1.3 Install latest code from GitHub </a></li>
+<li><a href="#sec-1_4">1.4 Usage </a>
 <ul>
-<li><a href="#sec-1_2_1">1.2.1 API </a></li>
-<li><a href="#sec-1_2_2">1.2.2 Beautifier shortcoming &ndash; no more comments </a></li>
+<li><a href="#sec-1_4_1">1.4.1 API </a></li>
+<li><a href="#sec-1_4_2">1.4.2 Beautifier shortcoming &ndash; no more comments </a></li>
 </ul>
 </li>
-<li><a href="#sec-1_3">1.3 Compression &ndash; how good is it? </a></li>
-<li><a href="#sec-1_4">1.4 Bugs? </a></li>
-<li><a href="#sec-1_5">1.5 Links </a></li>
-<li><a href="#sec-1_6">1.6 License </a></li>
+<li><a href="#sec-1_5">1.5 Compression &ndash; how good is it? </a></li>
+<li><a href="#sec-1_6">1.6 Bugs? </a></li>
+<li><a href="#sec-1_7">1.7 Links </a></li>
+<li><a href="#sec-1_8">1.8 License </a></li>
 </ul>
 </li>
 </ul>
@@ -108,9 +110,6 @@ lang="en" xml:lang="en">
 <div class="outline-text-2" id="text-1">
 
 
-<p>
-<b>Update</b>: please read the section on <a href="#sec-1_1">unsafe transformations</a>.
-</p>
 <p>
 This package implements a general-purpose JavaScript
 parser/compressor/beautifier toolkit.  It is developed on <a href="http://nodejs.org/">NodeJS</a>, but it
@@ -250,10 +249,10 @@ The following transformations occur:
 
 
 
-<pre class="src src-espresso"><span style="color: #afeeee; font-weight: bold;">new</span> <span style="color: #87ceeb; font-weight: bold;">Array</span>(1, 2, 3, 4)  =&gt; [1,2,3,4]
+<pre class="src src-js"><span style="color: #a020f0;">new</span> <span style="color: #228b22;">Array</span>(1, 2, 3, 4)  =&gt; [1,2,3,4]
 Array(a, b, c)         =&gt; [a,b,c]
-<span style="color: #afeeee; font-weight: bold;">new</span> <span style="color: #87ceeb; font-weight: bold;">Array</span>(5)           =&gt; Array(5)
-<span style="color: #afeeee; font-weight: bold;">new</span> <span style="color: #87ceeb; font-weight: bold;">Array</span>(a)           =&gt; Array(a)
+<span style="color: #a020f0;">new</span> <span style="color: #228b22;">Array</span>(5)           =&gt; Array(5)
+<span style="color: #a020f0;">new</span> <span style="color: #228b22;">Array</span>(a)           =&gt; Array(a)
 </pre>
 
 
@@ -271,38 +270,38 @@ following cases UglifyJS <b>doesn't touch</b> calls or instantiations of Array:
 
 
 
-<pre class="src src-espresso"><span style="color: #add8e6;">// </span><span style="color: #add8e6;">case 1.  globally declared variable
-</span>  <span style="color: #afeeee; font-weight: bold;">var</span> <span style="color: #40e0d0; font-weight: bold;">Array</span>;
-  <span style="color: #afeeee; font-weight: bold;">new</span> <span style="color: #87ceeb; font-weight: bold;">Array</span>(1, 2, 3);
+<pre class="src src-js"><span style="color: #b22222;">// </span><span style="color: #b22222;">case 1.  globally declared variable
+</span>  <span style="color: #a020f0;">var</span> <span style="color: #b8860b;">Array</span>;
+  <span style="color: #a020f0;">new</span> <span style="color: #228b22;">Array</span>(1, 2, 3);
   Array(a, b);
 
-  <span style="color: #add8e6;">// </span><span style="color: #add8e6;">or (can be declared later)
-</span>  <span style="color: #afeeee; font-weight: bold;">new</span> <span style="color: #87ceeb; font-weight: bold;">Array</span>(1, 2, 3);
-  <span style="color: #afeeee; font-weight: bold;">var</span> <span style="color: #40e0d0; font-weight: bold;">Array</span>;
+  <span style="color: #b22222;">// </span><span style="color: #b22222;">or (can be declared later)
+</span>  <span style="color: #a020f0;">new</span> <span style="color: #228b22;">Array</span>(1, 2, 3);
+  <span style="color: #a020f0;">var</span> <span style="color: #b8860b;">Array</span>;
 
-  <span style="color: #add8e6;">// </span><span style="color: #add8e6;">or (can be a function)
-</span>  <span style="color: #afeeee; font-weight: bold;">new</span> <span style="color: #87ceeb; font-weight: bold;">Array</span>(1, 2, 3);
-  <span style="color: #afeeee; font-weight: bold;">function</span> <span style="color: #7fffd4; font-weight: bold;">Array</span>() { ... }
+  <span style="color: #b22222;">// </span><span style="color: #b22222;">or (can be a function)
+</span>  <span style="color: #a020f0;">new</span> <span style="color: #228b22;">Array</span>(1, 2, 3);
+  <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">Array</span>() { ... }
 
-<span style="color: #add8e6;">// </span><span style="color: #add8e6;">case 2.  declared in a function
-</span>  (<span style="color: #afeeee; font-weight: bold;">function</span>(){
-    a = <span style="color: #afeeee; font-weight: bold;">new</span> <span style="color: #87ceeb; font-weight: bold;">Array</span>(1, 2, 3);
+<span style="color: #b22222;">// </span><span style="color: #b22222;">case 2.  declared in a function
+</span>  (<span style="color: #a020f0;">function</span>(){
+    a = <span style="color: #a020f0;">new</span> <span style="color: #228b22;">Array</span>(1, 2, 3);
     b = Array(5, 6);
-    <span style="color: #afeeee; font-weight: bold;">var</span> <span style="color: #40e0d0; font-weight: bold;">Array</span>;
+    <span style="color: #a020f0;">var</span> <span style="color: #b8860b;">Array</span>;
   })();
 
-  <span style="color: #add8e6;">// </span><span style="color: #add8e6;">or
-</span>  (<span style="color: #afeeee; font-weight: bold;">function</span>(<span style="color: #40e0d0; font-weight: bold;">Array</span>){
-    <span style="color: #afeeee; font-weight: bold;">return</span> Array(5, 6, 7);
+  <span style="color: #b22222;">// </span><span style="color: #b22222;">or
+</span>  (<span style="color: #a020f0;">function</span>(<span style="color: #b8860b;">Array</span>){
+    <span style="color: #a020f0;">return</span> Array(5, 6, 7);
   })();
 
-  <span style="color: #add8e6;">// </span><span style="color: #add8e6;">or
-</span>  (<span style="color: #afeeee; font-weight: bold;">function</span>(){
-    <span style="color: #afeeee; font-weight: bold;">return</span> <span style="color: #afeeee; font-weight: bold;">new</span> <span style="color: #87ceeb; font-weight: bold;">Array</span>(1, 2, 3, 4);
-    <span style="color: #afeeee; font-weight: bold;">function</span> <span style="color: #7fffd4; font-weight: bold;">Array</span>() { ... }
+  <span style="color: #b22222;">// </span><span style="color: #b22222;">or
+</span>  (<span style="color: #a020f0;">function</span>(){
+    <span style="color: #a020f0;">return</span> <span style="color: #a020f0;">new</span> <span style="color: #228b22;">Array</span>(1, 2, 3, 4);
+    <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">Array</span>() { ... }
   })();
 
-  <span style="color: #add8e6;">// </span><span style="color: #add8e6;">etc.
+  <span style="color: #b22222;">// </span><span style="color: #b22222;">etc.
 </span></pre>
 
 
@@ -313,13 +312,57 @@ following cases UglifyJS <b>doesn't touch</b> calls or instantiations of Array:
 </div>
 
 <div id="outline-container-1_2" class="outline-3">
-<h3 id="sec-1_2"><span class="section-number-3">1.2</span> Usage </h3>
+<h3 id="sec-1_2"><span class="section-number-3">1.2</span> Install (NPM) </h3>
 <div class="outline-text-3" id="text-1_2">
 
 
 <p>
-There is a helper script now &mdash; <code>bin/uglifyjs</code> &mdash; that uses the library to
-compress a script using the maximum compression settings.  Synopsis:
+UglifyJS is now available through NPM &mdash; <code>npm install uglify-js</code> should do
+the job.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-1_3" class="outline-3">
+<h3 id="sec-1_3"><span class="section-number-3">1.3</span> Install latest code from GitHub </h3>
+<div class="outline-text-3" id="text-1_3">
+
+
+
+
+
+<pre class="src src-sh"><span style="color: #b22222;">## </span><span style="color: #b22222;">clone the repository
+</span>mkdir -p /where/you/wanna/put/it
+<span style="color: #da70d6;">cd</span> /where/you/wanna/put/it
+git clone git://github.com/mishoo/UglifyJS.git
+
+<span style="color: #b22222;">## </span><span style="color: #b22222;">make the module available to Node
+</span>mkdir -p ~/.node_libraries/
+<span style="color: #da70d6;">cd</span> ~/.node_libraries/
+ln -s /where/you/wanna/put/it/UglifyJS/uglify-js.js
+
+<span style="color: #b22222;">## </span><span style="color: #b22222;">and if you want the CLI script too:
+</span>mkdir -p ~/bin
+<span style="color: #da70d6;">cd</span> ~/bin
+ln -s /where/you/wanna/put/it/UglifyJS/bin/uglifyjs
+  <span style="color: #b22222;"># </span><span style="color: #b22222;">(then add ~/bin to your $PATH if it's not there already)
+</span></pre>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1_4" class="outline-3">
+<h3 id="sec-1_4"><span class="section-number-3">1.4</span> Usage </h3>
+<div class="outline-text-3" id="text-1_4">
+
+
+<p>
+There is a command-line tool that exposes the functionality of this library
+for your shell-scripting needs:
 </p>
 
 
@@ -456,26 +499,26 @@ intact you'd specify &ndash;reserved-names "require,$super".
 
 </div>
 
-<div id="outline-container-1_2_1" class="outline-4">
-<h4 id="sec-1_2_1"><span class="section-number-4">1.2.1</span> API </h4>
-<div class="outline-text-4" id="text-1_2_1">
+<div id="outline-container-1_4_1" class="outline-4">
+<h4 id="sec-1_4_1"><span class="section-number-4">1.4.1</span> API </h4>
+<div class="outline-text-4" id="text-1_4_1">
 
 
 <p>
-Symlink the <b>lib</b> directory as <b>~/.node_libraries/uglifyjs</b>, so that the
-<b>require</b> calls in the following sample will work:
+To use the library from JavaScript, you'd do the following (example for
+NodeJS):
 </p>
 
 
 
-<pre class="src src-espresso"><span style="color: #afeeee; font-weight: bold;">var</span> <span style="color: #40e0d0; font-weight: bold;">jsp</span> = require(<span style="color: #87cefa;">"uglifyjs/parse-js"</span>);
-<span style="color: #afeeee; font-weight: bold;">var</span> <span style="color: #40e0d0; font-weight: bold;">pro</span> = require(<span style="color: #87cefa;">"uglifyjs/process"</span>);
+<pre class="src src-js"><span style="color: #a020f0;">var</span> <span style="color: #b8860b;">jsp</span> = require(<span style="color: #bc8f8f;">"uglify-js"</span>).parser;
+<span style="color: #a020f0;">var</span> <span style="color: #b8860b;">pro</span> = require(<span style="color: #bc8f8f;">"uglify-js"</span>).uglify;
 
-<span style="color: #afeeee; font-weight: bold;">var</span> <span style="color: #40e0d0; font-weight: bold;">orig_code</span> = <span style="color: #87cefa;">"... JS code here"</span>;
-<span style="color: #afeeee; font-weight: bold;">var</span> <span style="color: #40e0d0; font-weight: bold;">ast</span> = jsp.parse(orig_code); <span style="color: #add8e6;">// </span><span style="color: #add8e6;">parse code and get the initial AST
-</span>ast = pro.ast_mangle(ast); <span style="color: #add8e6;">// </span><span style="color: #add8e6;">get a new AST with mangled names
-</span>ast = pro.ast_squeeze(ast); <span style="color: #add8e6;">// </span><span style="color: #add8e6;">get an AST with compression optimizations
-</span><span style="color: #afeeee; font-weight: bold;">var</span> <span style="color: #40e0d0; font-weight: bold;">final_code</span> = pro.gen_code(ast); <span style="color: #add8e6;">// </span><span style="color: #add8e6;">compressed code here
+<span style="color: #a020f0;">var</span> <span style="color: #b8860b;">orig_code</span> = <span style="color: #bc8f8f;">"... JS code here"</span>;
+<span style="color: #a020f0;">var</span> <span style="color: #b8860b;">ast</span> = jsp.parse(orig_code); <span style="color: #b22222;">// </span><span style="color: #b22222;">parse code and get the initial AST
+</span>ast = pro.ast_mangle(ast); <span style="color: #b22222;">// </span><span style="color: #b22222;">get a new AST with mangled names
+</span>ast = pro.ast_squeeze(ast); <span style="color: #b22222;">// </span><span style="color: #b22222;">get an AST with compression optimizations
+</span><span style="color: #a020f0;">var</span> <span style="color: #b8860b;">final_code</span> = pro.gen_code(ast); <span style="color: #b22222;">// </span><span style="color: #b22222;">compressed code here
 </span></pre>
 
 
@@ -572,9 +615,9 @@ characters as <code>\uXXXX</code>.
 
 </div>
 
-<div id="outline-container-1_2_2" class="outline-4">
-<h4 id="sec-1_2_2"><span class="section-number-4">1.2.2</span> Beautifier shortcoming &ndash; no more comments </h4>
-<div class="outline-text-4" id="text-1_2_2">
+<div id="outline-container-1_4_2" class="outline-4">
+<h4 id="sec-1_4_2"><span class="section-number-4">1.4.2</span> Beautifier shortcoming &ndash; no more comments </h4>
+<div class="outline-text-4" id="text-1_4_2">
 
 
 <p>
@@ -595,9 +638,9 @@ the processing stages.
 
 </div>
 
-<div id="outline-container-1_3" class="outline-3">
-<h3 id="sec-1_3"><span class="section-number-3">1.3</span> Compression &ndash; how good is it? </h3>
-<div class="outline-text-3" id="text-1_3">
+<div id="outline-container-1_5" class="outline-3">
+<h3 id="sec-1_5"><span class="section-number-3">1.5</span> Compression &ndash; how good is it? </h3>
+<div class="outline-text-3" id="text-1_5">
 
 
 <p>
@@ -662,9 +705,9 @@ I shall rule the world. :-) Use it, and <b>spread the word</b>!
 
 </div>
 
-<div id="outline-container-1_4" class="outline-3">
-<h3 id="sec-1_4"><span class="section-number-3">1.4</span> Bugs? </h3>
-<div class="outline-text-3" id="text-1_4">
+<div id="outline-container-1_6" class="outline-3">
+<h3 id="sec-1_6"><span class="section-number-3">1.6</span> Bugs? </h3>
+<div class="outline-text-3" id="text-1_6">
 
 
 <p>
@@ -688,9 +731,9 @@ I'd love to hear about them (<a href="http://groups.google.com/group/uglifyjs">u
 
 </div>
 
-<div id="outline-container-1_5" class="outline-3">
-<h3 id="sec-1_5"><span class="section-number-3">1.5</span> Links </h3>
-<div class="outline-text-3" id="text-1_5">
+<div id="outline-container-1_7" class="outline-3">
+<h3 id="sec-1_7"><span class="section-number-3">1.7</span> Links </h3>
+<div class="outline-text-3" id="text-1_7">
 
 
 <ul>
@@ -716,9 +759,9 @@ Common Lisp JS uglifier: <a href="http://github.com/mishoo/cl-uglify-js">http://
 
 </div>
 
-<div id="outline-container-1_6" class="outline-3">
-<h3 id="sec-1_6"><span class="section-number-3">1.6</span> License </h3>
-<div class="outline-text-3" id="text-1_6">
+<div id="outline-container-1_8" class="outline-3">
+<h3 id="sec-1_8"><span class="section-number-3">1.8</span> License </h3>
+<div class="outline-text-3" id="text-1_8">
 
 
 <p>
@@ -774,7 +817,7 @@ SUCH DAMAGE.
 <div id="postamble">
 <p class="author"> Author: Mihai Bazon
 </p>
-<p class="date"> Date: 2011-02-28 22:35:00 EET</p>
+<p class="date"> Date: 2011-04-04 00:07:13 EEST</p>
 <p class="creator">HTML generated by org-mode 7.01trans in emacs 23</p>
 </div>
 </div>

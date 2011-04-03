@@ -1,6 +1,22 @@
-{"name"    : "uglify-js",
- "author"  : "Mihai Bazon - http://github.com/mishoo",
- "version" : "0.0.1",
- "main"    : "index.js",
- "bin"     : { "uglifyjs" : "./bin/uglifyjs" },
+{
+        "name"    : "uglify-js",
+
+        "author"  : {
+                "name"  : "Mihai Bazon",
+                "email" : "mihai.bazon@gmail.com",
+                "url"   : "http://mihai.bazon.net/blog"
+        },
+
+        "version" : "1.0.1",
+
+        "main"    : "./uglify-js.js",
+
+        "bin"     : {
+                "uglifyjs" : "./bin/uglifyjs"
+        },
+
+        "repository": {
+                "type": "git",
+                "url": "git@github.com:mishoo/UglifyJS.git"
+        }
 }

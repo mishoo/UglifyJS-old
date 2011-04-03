@@ -7,8 +7,6 @@
 
 * UglifyJS --- a JavaScript parser/compressor/beautifier
 
-*Update*: please read the section on [[unsafe transformations]].
-
 This package implements a general-purpose JavaScript
 parser/compressor/beautifier toolkit.  It is developed on [[http://nodejs.org/][NodeJS]], but it
 should work on any JavaScript platform supporting the CommonJS module system
@@ -88,7 +86,7 @@ know.
 
 The following transformations occur:
 
-#+BEGIN_SRC espresso
+#+BEGIN_SRC js
 new Array(1, 2, 3, 4)  => [1,2,3,4]
 Array(a, b, c)         => [a,b,c]
 new Array(5)           => Array(5)
@@ -103,7 +101,7 @@ UglifyJS does handle the case where Array is redefined locally, or even
 globally but with a =function= or =var= declaration.  Therefore, in the
 following cases UglifyJS *doesn't touch* calls or instantiations of Array:
 
-#+BEGIN_SRC espresso
+#+BEGIN_SRC js
 // case 1.  globally declared variable
   var Array;
   new Array(1, 2, 3);
@@ -138,10 +136,35 @@ following cases UglifyJS *doesn't touch* calls or instantiations of Array:
   // etc.
 #+END_SRC
 
+** Install (NPM)
+
+UglifyJS is now available through NPM --- =npm install uglify-js= should do
+the job.
+
+** Install latest code from GitHub
+
+#+BEGIN_SRC sh
+## clone the repository
+mkdir -p /where/you/wanna/put/it
+cd /where/you/wanna/put/it
+git clone git://github.com/mishoo/UglifyJS.git
+
+## make the module available to Node
+mkdir -p ~/.node_libraries/
+cd ~/.node_libraries/
+ln -s /where/you/wanna/put/it/UglifyJS/uglify-js.js
+
+## and if you want the CLI script too:
+mkdir -p ~/bin
+cd ~/bin
+ln -s /where/you/wanna/put/it/UglifyJS/bin/uglifyjs
+  # (then add ~/bin to your $PATH if it's not there already)
+#+END_SRC
+
 ** Usage
 
-There is a helper script now --- =bin/uglifyjs= --- that uses the library to
-compress a script using the maximum compression settings.  Synopsis:
+There is a command-line tool that exposes the functionality of this library
+for your shell-scripting needs:
 
 #+BEGIN_SRC sh
 uglifyjs [ options... ] [ filename ]
@@ -226,12 +249,12 @@ Supported options:
 
 *** API
 
-Symlink the *lib* directory as *~/.node\_libraries/uglifyjs*, so that the
-*require* calls in the following sample will work:
+To use the library from JavaScript, you'd do the following (example for
+NodeJS):
 
-#+BEGIN_SRC espresso
-var jsp = require("uglifyjs/parse-js");
-var pro = require("uglifyjs/process");
+#+BEGIN_SRC js
+var jsp = require("uglify-js").parser;
+var pro = require("uglify-js").uglify;
 
 var orig_code = "... JS code here";
 var ast = jsp.parse(orig_code); // parse code and get the initial AST
