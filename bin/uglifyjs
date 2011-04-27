@@ -20,6 +20,7 @@ var options = {
         max_line_length: 32 * 1024,
         unsafe: false,
         reserved_names: null,
+        defines: { },
         codegen_options: {
                 ascii_only: false,
                 beautify: false,
@@ -94,6 +95,50 @@ out: while (args.length > 0) {
             case "--reserved-names":
                 options.reserved_names = args.shift().split(",");
                 break;
+            case "-d":
+            case "--define":
+                 var defarg = args.shift();
+                 try {
+                     var defsym = function(sym) {
+                             // KEYWORDS_ATOM doesn't include NaN or Infinity - should we check
+                             // for them too ?? We don't check reserved words and the like as the
+                             // define values are only substituted AFTER parsing
+                             if (jsp.KEYWORDS_ATOM.hasOwnProperty(sym)) {
+                                 throw "Don't define values for inbuilt constant '"+sym+"'";
+                             }
+                             return sym;
+                         },
+                         defval = function(v) {
+                             if (v.match(/^"(.*)"$/) || v.match(/^'(.*)'$/)) {
+                                 return [ "string", RegExp.$1 ];
+                             }
+                             else if (!isNaN(parseFloat(v))) {
+                                 return [ "num", parseFloat(v) ];
+                             }
+                             else if (v.match(/^[a-z\$_][a-z\$_0-9]*$/i)) {
+                                 return [ "name", v ];
+                             }
+                             else if (!v.match(/"/)) {
+                                 return [ "string", v ];
+                             }
+                             else if (!v.match(/'/)) {
+                                 return [ "string", v ];
+                             }
+                             throw "Can't understand the specified value: "+v
+                         };
+                     if (defarg.match(/^([a-z_\$][a-z_\$0-9]*)(=(.*))?$/i)) {
+                         var sym = defsym(RegExp.$1),
+                             val = RegExp.$2 ? defval(RegExp.$2.substr(1)) : [ 'name', 'true' ];
+                         options.defines[sym] = val;
+                     }
+                     else {
+                         throw "The --define option expects SYMBOL[=value]";
+                     }
+                 } catch(ex) {
+                     sys.print("ERROR: In option --define "+defarg+"\n"+ex+"\n");
+                     process.exit(1);
+                 }
+                 break;
             case "--ascii":
                 options.codegen_options.ascii_only = true;
                 break;
@@ -176,6 +221,7 @@ function squeeze_it(code) {
                 if (options.mangle) ast = time_it("mangle", function(){
                         return pro.ast_mangle(ast, {
                                 toplevel: options.mangle_toplevel,
+                                defines: options.defines,
                                 except: options.reserved_names
                         });
                 });
