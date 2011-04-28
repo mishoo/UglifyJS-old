@@ -124,7 +124,7 @@ out: while (args.length > 0) {
                              else if (!v.match(/'/)) {
                                  return [ "string", v ];
                              }
-                             throw "Can't understand the specified value: "+v
+                             throw "Can't understand the specified value: "+v;
                          };
                      if (defarg.match(/^([a-z_\$][a-z_\$0-9]*)(=(.*))?$/i)) {
                          var sym = defsym(RegExp.$1),
@@ -139,6 +139,34 @@ out: while (args.length > 0) {
                      process.exit(1);
                  }
                  break;
+            case "--define-from-module":
+                var defmodarg = args.shift(),
+                    defmodule = require(defmodarg),
+                    sym,
+                    val;
+                for (sym in defmodule) {
+                    if (defmodule.hasOwnProperty(sym)) {
+                        options.defines[sym] = function(val) {
+                            if (typeof val == "string")
+                                return [ "string", val ];
+                            if (typeof val == "number")
+                                return [ "num", val ];
+                            if (val === true)
+                                return [ 'name', 'true' ];
+                            if (val === false)
+                                return [ 'name', 'false' ];
+                            if (val === null)
+                                return [ 'name', 'null' ];
+                            if (val === undefined)
+                                return [ 'name', 'undefined' ];
+                            sys.print("ERROR: In option --define-from-module "+defmodarg+"\n");
+                            sys.print("ERROR: Unknown object type for: "+sym+"="+val+"\n");
+                            process.exit(1);
+                            return null;
+                        }(defmodule[sym]);
+                    }
+                }
+                break;
             case "--ascii":
                 options.codegen_options.ascii_only = true;
                 break;
