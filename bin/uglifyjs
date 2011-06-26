@@ -196,7 +196,7 @@ if (options.make) {
         output(makefile.files.map(function(file){
                 var code = fs.readFileSync(file.name);
                 if (file.module) {
-                        code = "(function(){return this}())." + file.module + " = (function(exports, global){" + code + "\n;return exports;})({}, (function(){return this}()));";
+                        code = "!function(exports, global){global = this;\n" + code + "\n;this." + file.module + " = exports;}({})";
                 }
                 else if (file.hide) {
                         code = "(function(){" + code + "}());";
