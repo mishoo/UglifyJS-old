@@ -7,7 +7,7 @@
                 "url"   : "http://mihai.bazon.net/blog"
         },
 
-        "version" : "1.0.5",
+        "version" : "1.0.6",
 
         "main"    : "./uglify-js.js",
 
