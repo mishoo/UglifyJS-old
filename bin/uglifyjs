@@ -27,7 +27,8 @@ var options = {
                 indent_level: 4,
                 indent_start: 0,
                 quote_keys: false,
-                space_colon: false
+                space_colon: false,
+                inline_script: false
         },
         make: false,
         output: true            // stdout
@@ -173,6 +174,9 @@ out: while (args.length > 0) {
                 break;
             case "--make":
                 options.make = true;
+                break;
+            case "--inline-script":
+                options.codegen_options.inline_script = true;
                 break;
             default:
                 filename = v;
