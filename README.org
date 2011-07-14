@@ -247,6 +247,10 @@ Supported options:
   names from the mangler.  For example, to keep names =require= and =$super=
   intact you'd specify --reserved-names "require,$super".
 
+- =--inline-script= -- when you want to include the output literally in an
+  HTML =<script>= tag you can use this option to prevent =</script= from
+  showing up in the output.
+
 *** API
 
 To use the library from JavaScript, you'd do the following (example for
@@ -311,6 +315,8 @@ Some of these functions take optional arguments.  Here's a description:
     to put a space before the colon in object literals
   - =ascii_only: false= -- pass =true= if you want to encode non-ASCII
     characters as =\uXXXX=.
+  - =inline_script: false= -- pass =true= to escape occurrences of
+    =</script= in strings
 
 *** Beautifier shortcoming -- no more comments
 

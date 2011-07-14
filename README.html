@@ -7,7 +7,7 @@ lang="en" xml:lang="en">
 <title>UglifyJS -- a JavaScript parser/compressor/beautifier</title>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2011-04-04 00:07:13 EEST"/>
+<meta name="generated" content="2011-07-14 12:50:31 EEST"/>
 <meta name="author" content="Mihai Bazon"/>
 <meta name="description" content="a JavaScript parser/compressor/beautifier in JavaScript"/>
 <meta name="keywords" content="javascript, js, parser, compiler, compressor, mangle, minify, minifier"/>
@@ -249,10 +249,10 @@ The following transformations occur:
 
 
 
-<pre class="src src-js"><span style="color: #a020f0;">new</span> <span style="color: #228b22;">Array</span>(1, 2, 3, 4)  =&gt; [1,2,3,4]
+<pre class="src src-js"><span style="color: #8b0000;">new</span> <span style="color: #4682b4;">Array</span>(1, 2, 3, 4)  =&gt; [1,2,3,4]
 Array(a, b, c)         =&gt; [a,b,c]
-<span style="color: #a020f0;">new</span> <span style="color: #228b22;">Array</span>(5)           =&gt; Array(5)
-<span style="color: #a020f0;">new</span> <span style="color: #228b22;">Array</span>(a)           =&gt; Array(a)
+<span style="color: #8b0000;">new</span> <span style="color: #4682b4;">Array</span>(5)           =&gt; Array(5)
+<span style="color: #8b0000;">new</span> <span style="color: #4682b4;">Array</span>(a)           =&gt; Array(a)
 </pre>
 
 
@@ -270,38 +270,38 @@ following cases UglifyJS <b>doesn't touch</b> calls or instantiations of Array:
 
 
 
-<pre class="src src-js"><span style="color: #b22222;">// </span><span style="color: #b22222;">case 1.  globally declared variable
-</span>  <span style="color: #a020f0;">var</span> <span style="color: #b8860b;">Array</span>;
-  <span style="color: #a020f0;">new</span> <span style="color: #228b22;">Array</span>(1, 2, 3);
+<pre class="src src-js"><span style="color: #00008b;">// </span><span style="color: #00008b;">case 1.  globally declared variable
+</span>  <span style="color: #8b0000;">var</span> <span style="color: #8b008b;">Array</span>;
+  <span style="color: #8b0000;">new</span> <span style="color: #4682b4;">Array</span>(1, 2, 3);
   Array(a, b);
 
-  <span style="color: #b22222;">// </span><span style="color: #b22222;">or (can be declared later)
-</span>  <span style="color: #a020f0;">new</span> <span style="color: #228b22;">Array</span>(1, 2, 3);
-  <span style="color: #a020f0;">var</span> <span style="color: #b8860b;">Array</span>;
+  <span style="color: #00008b;">// </span><span style="color: #00008b;">or (can be declared later)
+</span>  <span style="color: #8b0000;">new</span> <span style="color: #4682b4;">Array</span>(1, 2, 3);
+  <span style="color: #8b0000;">var</span> <span style="color: #8b008b;">Array</span>;
 
-  <span style="color: #b22222;">// </span><span style="color: #b22222;">or (can be a function)
-</span>  <span style="color: #a020f0;">new</span> <span style="color: #228b22;">Array</span>(1, 2, 3);
-  <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">Array</span>() { ... }
+  <span style="color: #00008b;">// </span><span style="color: #00008b;">or (can be a function)
+</span>  <span style="color: #8b0000;">new</span> <span style="color: #4682b4;">Array</span>(1, 2, 3);
+  <span style="color: #8b0000;">function</span> <span style="color: #8b2323;">Array</span>() { ... }
 
-<span style="color: #b22222;">// </span><span style="color: #b22222;">case 2.  declared in a function
-</span>  (<span style="color: #a020f0;">function</span>(){
-    a = <span style="color: #a020f0;">new</span> <span style="color: #228b22;">Array</span>(1, 2, 3);
+<span style="color: #00008b;">// </span><span style="color: #00008b;">case 2.  declared in a function
+</span>  (<span style="color: #8b0000;">function</span>(){
+    a = <span style="color: #8b0000;">new</span> <span style="color: #4682b4;">Array</span>(1, 2, 3);
     b = Array(5, 6);
-    <span style="color: #a020f0;">var</span> <span style="color: #b8860b;">Array</span>;
+    <span style="color: #8b0000;">var</span> <span style="color: #8b008b;">Array</span>;
   })();
 
-  <span style="color: #b22222;">// </span><span style="color: #b22222;">or
-</span>  (<span style="color: #a020f0;">function</span>(<span style="color: #b8860b;">Array</span>){
-    <span style="color: #a020f0;">return</span> Array(5, 6, 7);
+  <span style="color: #00008b;">// </span><span style="color: #00008b;">or
+</span>  (<span style="color: #8b0000;">function</span>(<span style="color: #8b008b;">Array</span>){
+    <span style="color: #8b0000;">return</span> Array(5, 6, 7);
   })();
 
-  <span style="color: #b22222;">// </span><span style="color: #b22222;">or
-</span>  (<span style="color: #a020f0;">function</span>(){
-    <span style="color: #a020f0;">return</span> <span style="color: #a020f0;">new</span> <span style="color: #228b22;">Array</span>(1, 2, 3, 4);
-    <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">Array</span>() { ... }
+  <span style="color: #00008b;">// </span><span style="color: #00008b;">or
+</span>  (<span style="color: #8b0000;">function</span>(){
+    <span style="color: #8b0000;">return</span> <span style="color: #8b0000;">new</span> <span style="color: #4682b4;">Array</span>(1, 2, 3, 4);
+    <span style="color: #8b0000;">function</span> <span style="color: #8b2323;">Array</span>() { ... }
   })();
 
-  <span style="color: #b22222;">// </span><span style="color: #b22222;">etc.
+  <span style="color: #00008b;">// </span><span style="color: #00008b;">etc.
 </span></pre>
 
 
@@ -332,21 +332,21 @@ the job.
 
 
 
-<pre class="src src-sh"><span style="color: #b22222;">## </span><span style="color: #b22222;">clone the repository
+<pre class="src src-sh"><span style="color: #00008b;">## </span><span style="color: #00008b;">clone the repository
 </span>mkdir -p /where/you/wanna/put/it
-<span style="color: #da70d6;">cd</span> /where/you/wanna/put/it
+<span style="color: #cd0000;">cd</span> /where/you/wanna/put/it
 git clone git://github.com/mishoo/UglifyJS.git
 
-<span style="color: #b22222;">## </span><span style="color: #b22222;">make the module available to Node
+<span style="color: #00008b;">## </span><span style="color: #00008b;">make the module available to Node
 </span>mkdir -p ~/.node_libraries/
-<span style="color: #da70d6;">cd</span> ~/.node_libraries/
+<span style="color: #cd0000;">cd</span> ~/.node_libraries/
 ln -s /where/you/wanna/put/it/UglifyJS/uglify-js.js
 
-<span style="color: #b22222;">## </span><span style="color: #b22222;">and if you want the CLI script too:
+<span style="color: #00008b;">## </span><span style="color: #00008b;">and if you want the CLI script too:
 </span>mkdir -p ~/bin
-<span style="color: #da70d6;">cd</span> ~/bin
+<span style="color: #cd0000;">cd</span> ~/bin
 ln -s /where/you/wanna/put/it/UglifyJS/bin/uglifyjs
-  <span style="color: #b22222;"># </span><span style="color: #b22222;">(then add ~/bin to your $PATH if it's not there already)
+  <span style="color: #00008b;"># </span><span style="color: #00008b;">(then add ~/bin to your $PATH if it's not there already)
 </span></pre>
 
 
@@ -492,6 +492,12 @@ safety feature.
 pointed out in issue #92 and #81, so this option allow you to exclude such
 names from the mangler.  For example, to keep names <code>require</code> and <code>$super</code>
 intact you'd specify &ndash;reserved-names "require,$super".
+
+</li>
+<li>
+<code>--inline-script</code> &ndash; when you want to include the output literally in an
+HTML <code>&lt;script&gt;</code> tag you can use this option to prevent <code>&lt;/script</code> from
+showing up in the output.
 </li>
 </ul>
 
@@ -511,14 +517,14 @@ NodeJS):
 
 
 
-<pre class="src src-js"><span style="color: #a020f0;">var</span> <span style="color: #b8860b;">jsp</span> = require(<span style="color: #bc8f8f;">"uglify-js"</span>).parser;
-<span style="color: #a020f0;">var</span> <span style="color: #b8860b;">pro</span> = require(<span style="color: #bc8f8f;">"uglify-js"</span>).uglify;
+<pre class="src src-js"><span style="color: #8b0000;">var</span> <span style="color: #8b008b;">jsp</span> = require(<span style="color: #008b00;">"uglify-js"</span>).parser;
+<span style="color: #8b0000;">var</span> <span style="color: #8b008b;">pro</span> = require(<span style="color: #008b00;">"uglify-js"</span>).uglify;
 
-<span style="color: #a020f0;">var</span> <span style="color: #b8860b;">orig_code</span> = <span style="color: #bc8f8f;">"... JS code here"</span>;
-<span style="color: #a020f0;">var</span> <span style="color: #b8860b;">ast</span> = jsp.parse(orig_code); <span style="color: #b22222;">// </span><span style="color: #b22222;">parse code and get the initial AST
-</span>ast = pro.ast_mangle(ast); <span style="color: #b22222;">// </span><span style="color: #b22222;">get a new AST with mangled names
-</span>ast = pro.ast_squeeze(ast); <span style="color: #b22222;">// </span><span style="color: #b22222;">get an AST with compression optimizations
-</span><span style="color: #a020f0;">var</span> <span style="color: #b8860b;">final_code</span> = pro.gen_code(ast); <span style="color: #b22222;">// </span><span style="color: #b22222;">compressed code here
+<span style="color: #8b0000;">var</span> <span style="color: #8b008b;">orig_code</span> = <span style="color: #008b00;">"... JS code here"</span>;
+<span style="color: #8b0000;">var</span> <span style="color: #8b008b;">ast</span> = jsp.parse(orig_code); <span style="color: #00008b;">// </span><span style="color: #00008b;">parse code and get the initial AST
+</span>ast = pro.ast_mangle(ast); <span style="color: #00008b;">// </span><span style="color: #00008b;">get a new AST with mangled names
+</span>ast = pro.ast_squeeze(ast); <span style="color: #00008b;">// </span><span style="color: #00008b;">get an AST with compression optimizations
+</span><span style="color: #8b0000;">var</span> <span style="color: #8b008b;">final_code</span> = pro.gen_code(ast); <span style="color: #00008b;">// </span><span style="color: #00008b;">compressed code here
 </span></pre>
 
 
@@ -605,6 +611,10 @@ to put a space before the colon in object literals
 <li>
 <code>ascii_only: false</code> &ndash; pass <code>true</code> if you want to encode non-ASCII
 characters as <code>\uXXXX</code>.
+</li>
+<li>
+<code>inline_script: false</code> &ndash; pass <code>true</code> to escape occurrences of
+<code>&lt;/script</code> in strings
 </li>
 </ul>
 </li>
@@ -817,7 +827,7 @@ SUCH DAMAGE.
 <div id="postamble">
 <p class="author"> Author: Mihai Bazon
 </p>
-<p class="date"> Date: 2011-04-04 00:07:13 EEST</p>
+<p class="date"> Date: 2011-07-14 12:50:31 EEST</p>
 <p class="creator">HTML generated by org-mode 7.01trans in emacs 23</p>
 </div>
 </div>
