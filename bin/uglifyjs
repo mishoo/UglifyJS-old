@@ -269,6 +269,7 @@ function squeeze_it(code) {
         }
         try {
                 var ast = time_it("parse", function(){ return jsp.parse(code); });
+                //ast = time_it("lift", function(){ return pro.ast_lift_variables(ast); });
                 if (options.mangle) ast = time_it("mangle", function(){
                         return pro.ast_mangle(ast, {
                                 toplevel: options.mangle_toplevel,
