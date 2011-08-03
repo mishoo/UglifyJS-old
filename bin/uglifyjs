@@ -21,6 +21,7 @@ var options = {
         unsafe: false,
         reserved_names: null,
         defines: { },
+        lift_vars: false,
         codegen_options: {
                 ascii_only: false,
                 beautify: false,
@@ -96,6 +97,9 @@ out: while (args.length > 0) {
                 break;
             case "--reserved-names":
                 options.reserved_names = args.shift().split(",");
+                break;
+            case "--lift-vars":
+                options.lift_vars = true;
                 break;
             case "-d":
             case "--define":
@@ -269,7 +273,9 @@ function squeeze_it(code) {
         }
         try {
                 var ast = time_it("parse", function(){ return jsp.parse(code); });
-                //ast = time_it("lift", function(){ return pro.ast_lift_variables(ast); });
+                if (options.lift_vars) {
+                        ast = time_it("lift", function(){ return pro.ast_lift_variables(ast); });
+                }
                 if (options.mangle) ast = time_it("mangle", function(){
                         return pro.ast_mangle(ast, {
                                 toplevel: options.mangle_toplevel,
