@@ -227,10 +227,6 @@ Supported options:
 - =-v= or =--verbose= --- output some notes on STDERR (for now just how long
   each operation takes).
 
-- =--extra= --- enable additional optimizations that have not yet been
-  extensively tested.  These might, or might not, break your code.  If you
-  find a bug using this option, please report a test case.
-
 - =--unsafe= --- enable other additional optimizations that are known to be
   unsafe in some contrived situations, but could still be generally useful.
   For now only this:
@@ -250,6 +246,16 @@ Supported options:
 - =--inline-script= -- when you want to include the output literally in an
   HTML =<script>= tag you can use this option to prevent =</script= from
   showing up in the output.
+
+- =--lift-vars= -- when you pass this, UglifyJS will apply the following
+  transformations (see the notes in API, =ast_lift_variables=):
+
+  - put all =var= declarations at the start of the scope
+  - make sure a variable is declared only once
+  - discard unused function arguments
+  - discard unused inner (named) functions
+  - finally, try to merge assignments into that one =var= declaration, if
+    possible.
 
 *** API
 
@@ -280,6 +286,56 @@ Some of these functions take optional arguments.  Here's a description:
   =true= then the parser will throw an error when it expects a semicolon and
   it doesn't find it.  For most JS code you don't want that, but it's useful
   if you want to strictly sanitize your code.
+
+- =pro.ast_lift_variables(ast)= -- merge and move =var= declarations to the
+  scop of the scope; discard unused function arguments or variables; discard
+  unused (named) inner functions.  It also tries to merge assignments
+  following the =var= declaration into it.
+
+  If your code is very hand-optimized concerning =var= declarations, this
+  lifting variable declarations might actually increase size.  For me it
+  helps out.  On jQuery it adds 865 bytes (243 after gzip).  YMMV.  Also
+  note that (since it's not enabled by default) this operation isn't yet
+  heavily tested (please report if you find issues!).
+
+  Note that although it might increase the image size (on jQuery it gains
+  865 bytes, 243 after gzip) it's technically more correct: in certain
+  situations, dead code removal might drop variable declarations, which
+  would not happen if the variables are lifted in advance.
+
+  Here's an example of what it does:
+
+#+BEGIN_SRC js
+function f(a, b, c, d, e) {
+    var q;
+    var w;
+    w = 10;
+    q = 20;
+    for (var i = 1; i < 10; ++i) {
+        var boo = foo(a);
+    }
+    for (var i = 0; i < 1; ++i) {
+        var boo = bar(c);
+    }
+    function foo(){ ... }
+    function bar(){ ... }
+    function baz(){ ... }
+}
+
+// transforms into ==>
+
+function f(a, b, c) {
+    var i, boo, w = 10, q = 20;
+    for (i = 1; i < 10; ++i) {
+        boo = foo(a);
+    }
+    for (i = 0; i < 1; ++i) {
+        boo = bar(c);
+    }
+    function foo() { ... }
+    function bar() { ... }
+}
+#+END_SRC
 
 - =pro.ast_mangle(ast, options)= -- generates a new AST containing mangled
   (compressed) variable and function names.  It supports the following
@@ -395,6 +451,7 @@ I'd love to hear about them ([[http://groups.google.com/group/uglifyjs][use the 
 
 ** Links
 
+- Twitter: [[http://twitter.com/UglifyJS][@UglifyJS]]
 - Project at GitHub: [[http://github.com/mishoo/UglifyJS][http://github.com/mishoo/UglifyJS]]
 - Google Group: [[http://groups.google.com/group/uglifyjs][http://groups.google.com/group/uglifyjs]]
 - Common Lisp JS parser: [[http://marijn.haverbeke.nl/parse-js/][http://marijn.haverbeke.nl/parse-js/]]
