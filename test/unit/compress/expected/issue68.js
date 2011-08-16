@@ -1,1 +1,1 @@
-function f(){function b(){}a||b()}
+function f(){function b(){}if(a)return;b()}
