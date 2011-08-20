@@ -7,7 +7,7 @@ lang="en" xml:lang="en">
 <title>UglifyJS -- a JavaScript parser/compressor/beautifier</title>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2011-08-14 16:01:45 EEST"/>
+<meta name="generated" content="2011-08-20 10:08:28 EEST"/>
 <meta name="author" content="Mihai Bazon"/>
 <meta name="description" content="a JavaScript parser/compressor/beautifier in JavaScript"/>
 <meta name="keywords" content="javascript, js, parser, compiler, compressor, mangle, minify, minifier"/>
@@ -85,6 +85,7 @@ lang="en" xml:lang="en">
 <li><a href="#sec-1_1">1.1 Unsafe transformations </a>
 <ul>
 <li><a href="#sec-1_1_1">1.1.1 Calls involving the global Array constructor </a></li>
+<li><a href="#sec-1_1_2">1.1.2 <code>obj.toString()</code> ==&gt; <code>obj+“”</code> </a></li>
 </ul>
 </li>
 <li><a href="#sec-1_2">1.2 Install (NPM) </a></li>
@@ -224,16 +225,9 @@ function/variable declarations).
 
 
 <p>
-UglifyJS tries its best to achieve great compression while leaving the
-semantics of the code intact.  In general, if your code logic is broken by
-UglifyJS then it's a bug in UglifyJS and you should report it and I should
-fix it. :-)
-</p>
-<p>
-However, I opted to include the following potentially unsafe transformations
-as default behavior.  Discussion is welcome, if you have ideas of how to
-handle this better, or any objections to these optimizations, please let me
-know.
+The following transformations can in theory break code, although they're
+probably safe in most practical cases.  To enable them you need to pass the
+<code>--unsafe</code> flag.
 </p>
 
 </div>
@@ -304,6 +298,15 @@ following cases UglifyJS <b>doesn't touch</b> calls or instantiations of Array:
   <span style="color: #b22222;">// </span><span style="color: #b22222;">etc.
 </span></pre>
 
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1_1_2" class="outline-4">
+<h4 id="sec-1_1_2"><span class="section-number-4">1.1.2</span> <code>obj.toString()</code> ==&gt; <code>obj+“”</code> </h4>
+<div class="outline-text-4" id="text-1_1_2">
 
 
 </div>
@@ -575,16 +578,15 @@ following the <code>var</code> declaration into it.
 <p>
 If your code is very hand-optimized concerning <code>var</code> declarations, this
 lifting variable declarations might actually increase size.  For me it
-helps out.  YMMV.  Also note that (since it's not enabled by default) this
-operation isn't yet heavily tested (please report if you find issues!).
+helps out.  On jQuery it adds 865 bytes (243 after gzip).  YMMV.  Also
+note that (since it's not enabled by default) this operation isn't yet
+heavily tested (please report if you find issues!).
 </p>
 <p>
 Note that although it might increase the image size (on jQuery it gains
-865 bytes, 243 after gzip) it's technically more correct: dead code
-removal might drop variable declarations, which would not happen if the
-variables are lifted in advance. (that is to say, in other words, if your
-code has a bug, that bug should be properly preserved if you call
-<code>ast_lift_variables</code>).
+865 bytes, 243 after gzip) it's technically more correct: in certain
+situations, dead code removal might drop variable declarations, which
+would not happen if the variables are lifted in advance.
 </p>
 <p>
 Here's an example of what it does:
@@ -735,63 +737,30 @@ the processing stages.
 
 
 <p>
-(XXX: this is somewhat outdated.  On the jQuery source code we beat Closure
-by 168 bytes (560 after gzip) and by many seconds.)
+Here are updated statistics.  (I also updated my Google Closure and YUI
+installations).
 </p>
 <p>
-There are a few popular JS minifiers nowadays &ndash; the two most well known
-being the GoogleClosure (GCL) compiler and the YUI compressor.  For some
-reason they are both written in Java.  I didn't really hope to beat any of
-them, but finally I did &ndash; UglifyJS compresses better than the YUI
-compressor, and safer than GoogleClosure.
-</p>
-<p>
-I tested it on two big libraries.  <a href="http://www.dynarchlib.com/">DynarchLIB</a> is my own, and it's big enough
-to contain probably all the JavaScript tricks known to mankind.  <a href="http://jquery.com/">jQuery</a> is
-definitely the most popular JavaScript library (to some people, it's a
-synonym to JavaScript itself).
-</p>
-<p>
-I cannot swear that there are no bugs in the generated codes, but they
-appear to work fine.
-</p>
-<p>
-Compression results:
+We're still a lot better than YUI in terms of compression, though slightly
+slower.  We're still a lot faster than Closure, and compression after gzip
+is comparable.
 </p>
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 <caption></caption>
-<colgroup><col align="left" /><col align="right" /><col align="right" /><col align="left" /><col align="left" />
+<colgroup><col align="left" /><col align="left" /><col align="right" /><col align="left" /><col align="right" /><col align="left" /><col align="right" />
 </colgroup>
 <thead>
-<tr><th scope="col">Library</th><th scope="col">Orig. size</th><th scope="col">UglifyJS</th><th scope="col">YUI</th><th scope="col">GCL</th></tr>
+<tr><th scope="col">File</th><th scope="col">UglifyJS</th><th scope="col">UglifyJS+gzip</th><th scope="col">Closure</th><th scope="col">Closure+gzip</th><th scope="col">YUI</th><th scope="col">YUI+gzip</th></tr>
 </thead>
 <tbody>
-<tr><td>DynarchLIB</td><td>636896</td><td>241441</td><td>246452 (+5011)</td><td>240439 (-1002) (buggy)</td></tr>
-<tr><td>jQuery</td><td>163855</td><td>72006</td><td>79702  (+7696)</td><td>71858   (-148)</td></tr>
+<tr><td>jquery-1.6.2.js</td><td>91001 (0:01.59)</td><td>31896</td><td>90678 (0:07.40)</td><td>31979</td><td>101527 (0:01.82)</td><td>34646</td></tr>
+<tr><td>paper.js</td><td>142023 (0:01.65)</td><td>43334</td><td>134301 (0:07.42)</td><td>42495</td><td>173383 (0:01.58)</td><td>48785</td></tr>
+<tr><td>prototype.js</td><td>88544 (0:01.09)</td><td>26680</td><td>86955 (0:06.97)</td><td>26326</td><td>92130 (0:00.79)</td><td>28624</td></tr>
+<tr><td>thelib-full.js (DynarchLIB)</td><td>251939 (0:02.55)</td><td>72535</td><td>249911 (0:09.05)</td><td>72696</td><td>258869 (0:01.94)</td><td>76584</td></tr>
 </tbody>
 </table>
 
 
-<p>
-UglifyJS is the fastest to run.  On my laptop UglifyJS takes 1.35s for
-DynarchLIB, while YUI takes 2.7s and GCL takes 6.5s.
-</p>
-<p>
-GoogleClosure does a lot of smart ass optimizations.  I had to strive really
-hard to get close to it.  It should be possible to even beat it, but then
-again, GCL has a gazillion lines of code and runs terribly slow, so I'm not
-sure it worths spending the effort to save a few bytes.  Also, GCL doesn't
-cope with <code>eval()</code> or <code>with{}</code> &ndash; it just dumps a warning and proceeds to
-mangle names anyway; my DynarchLIB compiled with it is buggy because of
-this.
-</p>
-<p>
-UglifyJS consists of ~1100 lines of code for the tokenizer/parser, and ~1100
-lines for the compressor and code generator.  That should make it very
-maintainable and easily extensible, so I would say it has a good place in
-this field and it's bound to become the de-facto standard JS minifier.  And
-I shall rule the world. :-) Use it, and <b>spread the word</b>!
-</p>
 </div>
 
 </div>
@@ -911,7 +880,7 @@ SUCH DAMAGE.
 <div id="postamble">
 <p class="author"> Author: Mihai Bazon
 </p>
-<p class="date"> Date: 2011-08-14 16:01:45 EEST</p>
+<p class="date"> Date: 2011-08-20 10:08:28 EEST</p>
 <p class="creator">HTML generated by org-mode 7.01trans in emacs 23</p>
 </div>
 </div>
