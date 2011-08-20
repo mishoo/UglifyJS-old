@@ -304,6 +304,7 @@ function squeeze_it(code) {
                 sys.debug(ex.stack);
                 sys.debug(sys.inspect(ex));
                 sys.debug(JSON.stringify(ex));
+                process.exit(1);
         }
 };
 
