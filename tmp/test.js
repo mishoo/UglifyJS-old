@@ -11,6 +11,20 @@ var ast = jsp.parse(code);
 
 ast = pro.ast_lift_variables(ast);
 
+var w = pro.ast_walker();
+ast = w.with_walkers({
+        "function": function() {
+                var node = w.dive(this); // walk depth first
+                console.log(pro.gen_code(node, { beautify: true }));
+                return node;
+        },
+        "name": function(name) {
+                return [ this[0], "X" ];
+        }
+}, function(){
+        return w.walk(ast);
+});
+
 console.log(pro.gen_code(ast, {
         beautify: true
 }));
