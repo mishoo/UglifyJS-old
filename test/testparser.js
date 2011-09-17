@@ -393,7 +393,8 @@ function ParserTestSuite(callback){
 		['({get:5});','get property name thats not a getter'],
 		['({set:5});','set property name thats not a setter'],
 		['l !== "px" && (d.style(h, c, (k || 1) + l), j = (k || 1) / f.cur() * j, d.style(h, c, j + l)), i[1] && (k = (i[1] === "-=" ? -1 : 1) * k + j), f.custom(j, k, l)', 'this choked regex/div at some point'],
-		['(/\'/g, \'\\\\\\\'\') + "\'";', 'the sequence of escaped characters confused the tokenizer']
+		['(/\'/g, \'\\\\\\\'\') + "\'";', 'the sequence of escaped characters confused the tokenizer'],
+                ['if (true) /=a/.test("a");', 'regexp starting with "=" in not obvious context (not implied by preceding token)']
 	];
 
 	for (var i=0; i<inps.length; ++i) {
