@@ -286,7 +286,8 @@ function squeeze_it(code) {
                 if (options.squeeze) ast = time_it("squeeze", function(){
                         ast = pro.ast_squeeze(ast, {
                                 make_seqs  : options.make_seqs,
-                                dead_code  : options.dead_code
+                                dead_code  : options.dead_code,
+                                keep_comps : !options.unsafe
                         });
                         if (options.unsafe)
                                 ast = pro.ast_squeeze_more(ast);
