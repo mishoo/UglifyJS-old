@@ -1,5 +1,5 @@
 var fs = require('fs'),
-	uglify = require('uglify-js'),
+	uglify = require('../../uglify-js'),
 	jsp = uglify.parser,
 	nodeunit = require('nodeunit'),
 	path = require('path'),
