@@ -11,6 +11,7 @@ var options = {
         ast: false,
         mangle: true,
         mangle_toplevel: false,
+        no_mangle_functions: false,
         squeeze: true,
         make_seqs: true,
         dead_code: true,
@@ -56,6 +57,10 @@ out: while (args.length > 0) {
             case "-mt":
             case "--mangle-toplevel":
                 options.mangle_toplevel = true;
+                break;
+            case "-nmf":
+            case "--no-mangle-functions":
+                options.no_mangle_functions = true;
                 break;
             case "--no-mangle":
             case "-nm":
@@ -278,9 +283,10 @@ function squeeze_it(code) {
                 }
                 if (options.mangle) ast = time_it("mangle", function(){
                         return pro.ast_mangle(ast, {
-                                toplevel: options.mangle_toplevel,
-                                defines: options.defines,
-                                except: options.reserved_names
+                                toplevel     : options.mangle_toplevel,
+                                defines      : options.defines,
+                                except       : options.reserved_names,
+                                no_functions : options.no_mangle_functions
                         });
                 });
                 if (options.squeeze) ast = time_it("squeeze", function(){
