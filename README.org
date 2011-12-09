@@ -192,7 +192,10 @@ Supported options:
   output Unicode characters instead.  (the output is always encoded in UTF8,
   but if you pass this option you'll only get ASCII).
 
-- =-nm= or =--no-mangle= --- don't mangle variable names
+- =-nm= or =--no-mangle= --- don't mangle names.
+
+- =-nmf= or =--no-mangle-functions= -- in case you want to mangle variable
+  names, but not touch function names.
 
 - =-ns= or =--no-squeeze= --- don't call =ast_squeeze()= (which does various
   optimizations that result in smaller, less readable code).
@@ -239,7 +242,7 @@ Supported options:
   the value =true=, or you can specify a numeric value (such as
   =1024=), a quoted string value (such as ="object"= or
   ='https://github.com'=), or the name of another symbol or keyword
-  (such as =null= or =document=).  
+  (such as =null= or =document=).
   This allows you, for example, to assign meaningful names to key
   constant values but discard the symbolic names in the uglified
   version for brevity/efficiency, or when used wth care, allows
