@@ -4,11 +4,13 @@
 global.sys = require(/^v0\.[012]/.test(process.version) ? "sys" : "util");
 var fs = require("fs");
 var uglify = require("uglify-js"), // symlink ~/.node_libraries/uglify-js.js to ../uglify-js.js
+    consolidator = uglify.consolidator,
     jsp = uglify.parser,
     pro = uglify.uglify;
 
 var options = {
         ast: false,
+        consolidate: false,
         mangle: true,
         mangle_toplevel: false,
         no_mangle_functions: false,
@@ -45,6 +47,10 @@ out: while (args.length > 0) {
             case "-b":
             case "--beautify":
                 options.codegen_options.beautify = true;
+                break;
+            case "-c":
+            case "--consolidate-primitive-values":
+                options.consolidate = true;
                 break;
             case "-i":
             case "--indent":
@@ -278,6 +284,9 @@ function squeeze_it(code) {
         }
         try {
                 var ast = time_it("parse", function(){ return jsp.parse(code); });
+                if (options.consolidate) ast = time_it("consolidate", function(){
+                        return consolidator.ast_consolidate(ast);
+                });
                 if (options.lift_vars) {
                         ast = time_it("lift", function(){ return pro.ast_lift_variables(ast); });
                 }
