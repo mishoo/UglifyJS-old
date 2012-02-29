@@ -187,6 +187,10 @@ Supported options:
   - =-q= or =--quote-keys= --- quote keys in literal objects (by default,
     only keys that cannot be identifier names will be quotes).
 
+- =-c= or =----consolidate-primitive-values= --- consolidates null, Boolean,
+  and String values. Known as aliasing in the Closure Compiler. Worsens the
+  data compression ratio of gzip.
+
 - =--ascii= --- pass this argument to encode non-ASCII characters as
   =\uXXXX= sequences.  By default UglifyJS won't bother to do it and will
   output Unicode characters instead.  (the output is always encoded in UTF8,
