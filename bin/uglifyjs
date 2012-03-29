@@ -290,8 +290,9 @@ function squeeze_it(code) {
                 if (options.lift_vars) {
                         ast = time_it("lift", function(){ return pro.ast_lift_variables(ast); });
                 }
-                if (options.mangle) ast = time_it("mangle", function(){
+                ast = time_it("mangle", function(){
                         return pro.ast_mangle(ast, {
+                                mangle       : options.mangle,
                                 toplevel     : options.mangle_toplevel,
                                 defines      : options.defines,
                                 except       : options.reserved_names,
