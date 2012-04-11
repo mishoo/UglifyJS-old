@@ -8,14 +8,19 @@ var debug = function(){
         sys.log(Array.prototype.slice.call(arguments).join(', '));
 };
 
+var testsPassed = true;
+
 ParserTestSuite(function(i, input, desc){
 	try {
 		parseJS.parse(input);
 		debug("ok " + i + ": " + desc);
 	} catch(e){
 		debug("FAIL " + i + " " + desc + " (" + e + ")");
+    testsPassed = false;
 	}
 });
+
+process.exit(testsPassed ? 0 : 1);
 
 function ParserTestSuite(callback){
 	var inps = [
@@ -310,7 +315,7 @@ function ParserTestSuite(callback){
 		["try { s1; } finally { s2; };", "2 trycatchfinally statement"],
 		["try { s1; } catch (e) { s2; } finally { s3; };", "3 trycatchfinally statement"],
 		// debugger
-		["debugger;", "debuger statement"],
+		["debugger;", "debugger statement"],
 		// function decl
 		["function f(x) { e; return x; };", "1 function declaration"],
 		["function f() { x; y; };", "2 function declaration"],

@@ -27,6 +27,6 @@
         },
 
         "scripts": {
-          "test": "$(which nodeunit || echo node_modules/nodeunit/bin/nodeunit) test/unit/scripts.js && test/testparser.js"
+          "test": "$(which nodeunit || echo node_modules/nodeunit/bin/nodeunit) test/unit/scripts.js && test/testparser.js && test/testconsolidator.js"
         }
 }
