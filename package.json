@@ -20,5 +20,13 @@
         "repository": {
                 "type": "git",
                 "url": "git@github.com:mishoo/UglifyJS.git"
+        },
+
+        "devDependencies": {
+                "nodeunit": "0.7.x"
+        },
+
+        "scripts": {
+          "test": "$(which nodeunit || echo node_modules/nodeunit/bin/nodeunit) test/unit/scripts.js && test/testparser.js && test/testconsolidator.js"
         }
 }

@@ -2,3 +2,5 @@
 .tmp*~
 *.local.*
 .pinf-*
+node_modules/
+npm-debug.log
