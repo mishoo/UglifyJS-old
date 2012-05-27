@@ -1,4 +1,5 @@
 #! /usr/bin/env node
+global.DIGITS_OVERRIDE_FOR_TESTING = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$_0123456789";
 
 'use strict';
 /*jshint bitwise:true, curly:true, eqeqeq:true, forin:true, immed:true,
