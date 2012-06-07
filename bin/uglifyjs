@@ -2,7 +2,7 @@
 // -*- js -*-
 
 global.sys = require(/^v0\.[012]/.test(process.version) ? "sys" : "util");
-var fs = require("fs");
+var fs = require("fs"), path = require("path");
 var uglify = require("../uglify-js"), // symlink ~/.node_libraries/uglify-js.js to ../uglify-js.js
     consolidator = uglify.consolidator,
     jsp = uglify.parser,
@@ -211,9 +211,10 @@ jsp.set_logger(function(msg){
 
 if (options.make) {
         options.out_same_file = false; // doesn't make sense in this case
-        var makefile = JSON.parse(fs.readFileSync(filename || "Makefile.uglify.js").toString());
+        var makefile = global.eval("(" + fs.readFileSync(filename || "Makefile.uglify.js").toString() + ")");
+        var dir = path.dirname(filename);
         output(makefile.files.map(function(file){
-                var code = fs.readFileSync(file.name).toString();
+                var code = fs.readFileSync(path.join(dir, file.name)).toString();
                 if (file.module) {
                         code = "!function(exports, global){global = this;\n" + code + "\n;this." + file.module + " = exports;}({})";
                 }
