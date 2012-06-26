@@ -9,7 +9,7 @@
                 "url"   : "http://mihai.bazon.net/blog"
         },
 
-        "version" : "1.3.1",
+        "version" : "1.3.2",
 
         "main"    : "./uglify-js.js",
 
