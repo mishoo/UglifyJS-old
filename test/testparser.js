@@ -2,7 +2,7 @@
 global.DIGITS_OVERRIDE_FOR_TESTING = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$_0123456789";
 
 var parseJS = require("../lib/parse-js");
-var sys = require("sys");
+var sys = require("util");
 
 // write debug in a very straightforward manner
 var debug = function(){
