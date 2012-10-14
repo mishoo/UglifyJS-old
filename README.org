@@ -404,7 +404,8 @@ function f(a, b, c) {
   - =except= -- an array of names to exclude from compression.
   - =defines= -- an object with properties named after symbols to
     replace (see the =--define= option for the script) and the values
-    representing the AST replacement value.
+    representing the AST replacement value. For example,
+    ={ defines: { DEBUG: ['name', 'false'], VERSION: ['string', '1.0'] } }=
 
 - =pro.ast_squeeze(ast, options)= -- employs further optimizations designed
   to reduce the size of the code that =gen_code= would generate from the
