@@ -7,7 +7,7 @@ lang="en" xml:lang="en">
 <title>UglifyJS &ndash; a JavaScript parser/compressor/beautifier</title>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-08-27 12:38:12 EEST"/>
+<meta name="generated" content="2012-11-22 10:44:50 EET"/>
 <meta name="author" content="Mihai Bazon"/>
 <meta name="description" content="a JavaScript parser/compressor/beautifier in JavaScript"/>
 <meta name="keywords" content="javascript, js, parser, compiler, compressor, mangle, minify, minifier"/>
@@ -358,8 +358,14 @@ following cases UglifyJS <b>doesn't touch</b> calls or instantiations of Array:
 
 
 <p>
-UglifyJS is now available through NPM &mdash; <code>npm install uglify-js</code> should do
-the job.
+UglifyJS is now available through NPM &mdash; <code>npm install uglify-js@1</code> should
+do the job.
+</p>
+<p>
+<b>NOTE:</b> The NPM package has been upgraded to UglifyJS2.  If you need to
+install version 1.x you need to add `@1` to the command, as I did above.  I
+strongly suggest you to try to upgrade, though this might not be simple (v2
+has a completely different AST structure and API).
 </p>
 </div>
 
@@ -699,7 +705,8 @@ Some of these functions take optional arguments.  Here's a description:
 </li>
 <li><code>defines</code> &ndash; an object with properties named after symbols to
     replace (see the <code>--define</code> option for the script) and the values
-    representing the AST replacement value.
+    representing the AST replacement value. For example,
+    <code>{ defines: { DEBUG: ['name', 'false'], VERSION: ['string', '1.0'] } }</code>
 
 </li>
 </ul>
@@ -1002,9 +1009,9 @@ SUCH DAMAGE.
 </div>
 
 <div id="postamble">
-<p class="date">Date: 2012-08-27 12:38:12 EEST</p>
+<p class="date">Date: 2012-11-22 10:44:50 EET</p>
 <p class="author">Author: Mihai Bazon</p>
-<p class="creator">Org version 7.7 with Emacs version 23</p>
+<p class="creator">Org version 7.7 with Emacs version 24</p>
 <a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
 
 </div>

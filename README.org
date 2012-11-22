@@ -155,8 +155,13 @@ following cases UglifyJS *doesn't touch* calls or instantiations of Array:
 
 ** Install (NPM)
 
-UglifyJS is now available through NPM --- =npm install uglify-js= should do
-the job.
+UglifyJS is now available through NPM --- =npm install uglify-js@1= should
+do the job.
+
+*NOTE:* The NPM package has been upgraded to UglifyJS2.  If you need to
+install version 1.x you need to add `@1` to the command, as I did above.  I
+strongly suggest you to try to upgrade, though this might not be simple (v2
+has a completely different AST structure and API).
 
 ** Install latest code from GitHub
 
