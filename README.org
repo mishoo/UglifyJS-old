@@ -17,8 +17,6 @@ project page.
 Version 1 will continue to be maintained for fixing show-stopper bugs, but
 no new features should be expected.
 
-Please help me focus on version 2 by [[http://pledgie.com/campaigns/18110][making a donation]]!
-
 * UglifyJS --- a JavaScript parser/compressor/beautifier
 
 This package implements a general-purpose JavaScript
